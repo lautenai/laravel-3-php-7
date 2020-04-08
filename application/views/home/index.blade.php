@@ -21,8 +21,6 @@
 			<div class="home">
 				<h2>Learn the terrain.</h2>
 
-				<p><a href="one">One</a></p>
-
 				<p>
 					You've landed yourself on our default home page. The route that
 					is generating this page lives at:
@@ -49,7 +47,7 @@
 				</p>
 
 				<p>
-				{{ $encrypted = Crypter::encrypt(Input::get('value'))}}
+				{{ $encrypted = Crypter::encrypt(time())}}
 				<br>
 				{{$decrypted = Crypter::decrypt($encrypted)}}
 				</p>
