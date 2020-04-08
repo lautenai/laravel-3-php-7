@@ -37,28 +37,6 @@ Route::get('/', function()
 	return View::make('home.index');
 });
 
-Route::get('/one', function()
-{
-	return View::make('home.one');
-});
-
-Route::get('/two', function()
-{
-	return View::make('home.two');
-});
-
-Route::get('/three', function()
-{
-	return View::make('home.three');
-});
-// Route::get('/', function()
-// {
-// 	echo $encrypted = Crypter::encrypt(Input::get('value'));
-// 	echo '<br>';
-// 	echo $decrypted = Crypter::decrypt($encrypted);
-
-// });
-
 /*
 |--------------------------------------------------------------------------
 | Application 404 & 500 Error Handlers
