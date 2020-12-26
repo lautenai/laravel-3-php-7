@@ -2,6 +2,10 @@
 
 class Users_Controller extends Base_Controller {
 
+	public function __construct() {
+		parent::__construct();
+		$this->filter('before', 'csrf')->on('post');
+	}
 	/**
 	 * The layout being used by the controller.
 	 *
@@ -23,7 +27,10 @@ class Users_Controller extends Base_Controller {
 	 */
 	public function get_index()
 	{
-		$users = User::with(array('blog_posts', 'blog_comments'))->get();
+		
+		$users = Cache::remember('users', function() {
+			return User::with(array('blog_posts', 'blog_comments'))->get();
+		}, 1);
 
 		$this->layout->title   = 'Users';
 		$this->layout->content = View::make('users.index')->with('users', $users);
@@ -60,6 +67,8 @@ class Users_Controller extends Base_Controller {
 			$user->password = Input::get('password');
 
 			$user->save();
+
+			Cache::forget('users');
 
 			Session::flash('message', 'Added user #'.$user->id);
 
@@ -139,6 +148,8 @@ class Users_Controller extends Base_Controller {
 
 			$user->save();
 
+			Cache::forget('users');
+
 			Session::flash('message', 'Updated user #'.$user->id);
 
 			return Redirect::to('users');
@@ -165,6 +176,8 @@ class Users_Controller extends Base_Controller {
 		if( ! is_null($user))
 		{
 			$user->delete();
+
+			Cache::forget('users');
 
 			Session::flash('message', 'Deleted user #'.$user->id);
 		}
