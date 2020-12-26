@@ -91,11 +91,11 @@ class Users_Controller extends Base_Controller {
 	 */
 	public function get_view($id)
 	{
-		$user = User::with(array('blog_posts', 'blog_comments'))->find($id);
+		$user = User::with(array('blog_posts', 'blog_comments'))->find_or_fail($id);
 
 		if(is_null($user))
 		{
-			return Redirect::to('users');
+			// return Redirect::to('users');
 		}
 
 		$this->layout->title   = 'Viewing User #'.$id;

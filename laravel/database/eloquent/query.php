@@ -3,6 +3,7 @@
 use Laravel\Event;
 use Laravel\Database;
 use Laravel\Database\Eloquent\Relationships\Has_Many_And_Belongs_To;
+use Laravel\Response;
 
 class Query {
 
@@ -64,6 +65,30 @@ class Query {
 		$this->table->where($model::$key, '=', $id);
 
 		return $this->first($columns);
+	}
+
+	/**
+	 * Find or Fail a model by its primary key.
+	 * 
+	 * @param  mixed  $id
+	 * @param  array  $columns
+	 * @return mixed
+	 */
+	public function find_or_fail($id, $columns = array('*'))
+	{
+		$result = $this->find($id, $columns);
+
+		// $id = $id instanceof Arrayable ? $id->toArray() : $id;
+		
+        if (is_array($id)) {
+            if (count($result) === count(array_unique($id))) {
+                return $result;
+            }
+        } elseif (! is_null($result)) {
+            return $result;
+        }
+
+        die(Response::error('404'));
 	}
 
 	/**

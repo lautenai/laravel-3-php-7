@@ -8,6 +8,7 @@
 </div>
 
 {{Form::open(null, 'post', array('class' => 'form-stacked span16'))}}
+{{ Form::hidden('csrf_token', Session::token())}}
 	<fieldset>
 		<div class="clearfix">
 			{{Form::label('username', 'Username')}}
