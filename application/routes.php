@@ -32,10 +32,19 @@
 |
 */
 
+// Route::group(array('before' => 'auth'), function()
+// {
+// 	Route::controller(Controller::detect());
+// });
+
+Route::controller(Controller::detect());
+
 Route::get('/', function()
 {
 	return View::make('home.index');
 });
+
+
 
 /*
 |--------------------------------------------------------------------------

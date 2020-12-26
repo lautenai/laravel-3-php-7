@@ -6,7 +6,6 @@
 	<title>Laravel: A Framework For Web Artisans</title>
 	<meta name="viewport" content="width=device-width">
 	{{ HTML::style('laravel/css/style.css') }}
-	{{ HTML::script('js/turbolinks.js')}}
 </head>
 <body>
 	<div class="wrapper">
@@ -30,7 +29,7 @@
 
 				<p>And the view sitting before you can be found at:</p>
 
-				<pre>{{ path('app') }}views/home/index.blade.php</pre>
+				<pre>{{ path('app') }}views\home\index.blade.php</pre>
 
 				<h2>Grow in knowledge.</h2>
 
