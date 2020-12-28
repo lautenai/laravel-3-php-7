@@ -69,6 +69,13 @@ abstract class Model {
 	 * @var bool
 	 */
 	public static $timestamps = true;
+	
+	/**
+	 * Indicates if the model uses soft deletes.
+	 *
+	 * @var bool
+	 */
+	public static $soft_deletes = true;
 
 	/**
 	 * The name of the table associated with the model.
@@ -223,6 +230,34 @@ abstract class Model {
 		if (static::$timestamps) $model->timestamp();
 
 		return $model->query()->where($model->key(), '=', $id)->update($model->attributes);
+	}
+
+
+	/**
+	 * Update or Create a model instance in the database.
+	 *
+	 * @param  mixed  $id
+	 * @param  array  $attributes
+	 * @return int
+	 */
+
+	/*public function updateOrCreate(array $attributes, array $values = [])
+    {
+        return tap($this->firstOrNew($attributes), function ($instance) use ($values) {
+            $instance->fill($values)->save();
+        });
+    }*/
+	public static function update_or_create(array $attributes, array $values = [])
+	{
+		$model = new static(array(), true);
+
+		if ($id = $model->first_or_new($attributes)['id']) {
+			$model->fill($values);
+			if (static::$timestamps) $model->timestamp();
+			return $model->query()->where($model->key(), '=', $id)->update($model->attributes);
+		} else {
+			return $model->create($attributes + $values);
+		}		
 	}
 
 	/**
@@ -418,11 +453,55 @@ abstract class Model {
 	{
 		if ($this->exists)
 		{
-			$this->fire_event('deleting');
+			if (static::$soft_deletes) 
+			{	
+				$this->soft_delete();
+			} else 
+			{
+				$this->fire_event('deleting');
 
-			$result = $this->query()->where(static::$key, '=', $this->get_key())->delete();
+				$result = $this->query()->where(static::$key, '=', $this->get_key())->delete();
 
-			$this->fire_event('deleted');
+				$this->fire_event('deleted');
+
+				return $result;
+			}
+		}
+	}
+	
+	/**
+	 * Soft delete the model from the database.
+	 *
+	 * @return int
+	 */
+	public function soft_delete()
+	{
+		if ($this->exists)
+		{
+			$this->fire_event('soft deleting');
+
+			$result = $this->query()->where(static::$key, '=', $this->get_key())->update(array('deleted_at' => date('Y-m-d H:i:s')));
+
+			$this->fire_event('soft deleted');
+
+			return $result;
+		}
+	}
+
+	/**
+	 * Restore the model from the database.
+	 *
+	 * @return int
+	 */
+	public function restore()
+	{
+		if ($this->exists)
+		{
+			$this->fire_event('soft deleting');
+
+			$result = $this->query()->where(static::$key, '=', $this->get_key())->update(array('deleted_at' => null));
+
+			$this->fire_event('soft deleted');
 
 			return $result;
 		}

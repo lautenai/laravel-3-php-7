@@ -23,6 +23,7 @@
 						<a href="{{URL::to('blog/posts/view/'.$post->id)}}" class="btn">View</a>
 						<a href="{{URL::to('blog/posts/edit/'.$post->id)}}" class="btn">Edit</a>
 						<a href="{{URL::to('blog/posts/delete/'.$post->id)}}" class="btn danger" onclick="return confirm('Are you sure?')">Delete</a>
+						<a href="{{URL::to('blog/posts/restore/'.$post->id)}}" class="btn danger" onclick="return confirm('Are you sure?')">Delete</a>
 					</td>
 				</tr>
 			@endforeach

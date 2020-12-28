@@ -103,6 +103,45 @@ class Query {
 
 		return (count($results) > 0) ? head($results) : null;
 	}
+	
+	/**
+	 * Get the first model result for the query.
+	 *
+	 * @param  array  $columns
+	 * @return mixed
+	 */
+
+	/*public function firstOrNew(array $attributes = [], array $values = [])
+    {
+        if (! is_null($instance = $this->where($attributes)->first())) {
+            return $instance;
+        }
+
+        return $this->newModelInstance($attributes + $values);
+    }*/
+	public function first_or_new(array $attributes = [], array $values = [])
+	{
+		$model = $this->model;
+
+		foreach ($attributes as $key => $value) {
+			$this->table->where($key, '=', $value);
+		}
+
+		$result = $this->first();
+
+		return (isset($result)) ? head($result) : null;
+	}
+
+	/**
+	 * Get trashed of the model results for the query.
+	 *
+	 * @param  array  $columns
+	 * @return array
+	 */
+	public function trashed($columns = array('*'))
+	{
+		return $this->hydrate($this->model, $this->table->where_not_null('deleted_at')->get($columns));
+	}
 
 	/**
 	 * Get all of the model results for the query.
@@ -114,6 +153,7 @@ class Query {
 	{
 		return $this->hydrate($this->model, $this->table->get($columns));
 	}
+	
 
 	/**
 	 * Get an array of paginated model results.
@@ -165,8 +205,8 @@ class Query {
 
 			$models[] = $new;
 		}
-
-		if (count($results) > 0)
+		$count = (is_array($results) ? count($results) : 0);
+		if ( $count > 0) //count($results)
 		{
 			foreach ($this->model_includes() as $relationship => $constraints)
 			{

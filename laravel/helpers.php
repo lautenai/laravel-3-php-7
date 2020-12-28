@@ -34,9 +34,10 @@ function __($key, $replacements = array(), $language = null)
  */
 function dd($value)
 {
-	echo "<pre>";
-	var_dump($value);
-	echo "</pre>";
+	// echo "<pre>";
+	// var_dump($value);
+	// echo "</pre>";
+	highlight_string("<?php\n" . var_export($value, true) . ";\n?>");
 	die;
 }
 

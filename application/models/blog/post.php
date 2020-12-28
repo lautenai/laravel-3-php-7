@@ -17,6 +17,13 @@ class Blog_Post extends Eloquent {
 	public static $timestamps = true;
 
 	/**
+	 * Indicates if the model uses soft deletes.
+	 *
+	 * @var bool
+	 */
+	public static $soft_deletes = true;
+
+	/**
 	 * Establish the relationship between a post and a user.
 	 *
 	 * @return Laravel\Database\Eloquent\Relationships\Belongs_To
@@ -46,14 +53,19 @@ class Blog_Post extends Eloquent {
 	    return $this->where_null('deleted_at')->get();
 	}
 
+	// public function trashed()
+	// {
+	//     return $this->where_not_null('deleted_at')->get();
+	// }
+	
 	public function withtrashed()
 	{
-	    return $this->where_not_null('deleted_at')->get();
+	    return $this->get();
 	}
 
-	public function delete()
-	{
-	    $this->deleted_at = date('Y-m-d H:i:s');
-	    $this->save();
-	}
+	// public function delete()
+	// {
+	//     $this->deleted_at = date('Y-m-d H:i:s');
+	//     $this->save();
+	// }
 }
