@@ -14,22 +14,21 @@
 	<fieldset>
 		<div class="clearfix">
 			{{Form::label('user_id', 'User Id')}}
-
 			<div class="input">
-				{{Form::text('user_id', Input::old('user_id', $post->user_id), array('class' => 'span6'))}}
+		{{ Form::select('user_id', $user, $post->user_id, array('id' => 'user_id', 'class' => 'form-control', 'placeholder' => 'User Id', 'required' => 'required')) }}
 			</div>
 		</div>
 		<div class="clearfix">
 			{{Form::label('title', 'Title')}}
-
 			<div class="input">
+				
 				{{Form::text('title', Input::old('title', $post->title), array('class' => 'span6'))}}
 			</div>
 		</div>
 		<div class="clearfix">
 			{{Form::label('content', 'Content')}}
-
 			<div class="input">
+				
 				{{Form::textarea('content', Input::old('content', $post->content), array('class' => 'span10'))}}
 			</div>
 		</div>

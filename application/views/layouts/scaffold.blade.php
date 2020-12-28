@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>{{$title}}</title>
-	<link rel="stylesheet" type="text/css" href="{{asset('css/bootstrap.css')}}">
+	<link rel="stylesheet" type="text/css" href="{{asset('bundles/scaffold/css/bootstrap.css')}}">
 	<style>
 		body { margin: 40px; }
 	</style>

@@ -20,7 +20,7 @@
 
 			<div class="input">
 <?php if(strpos($field, '_id') !== false && in_array(substr($field, 0, -3), $belongs_to)): ?>
-				{{Form::text('<?php echo $field; ?>', Input::old('<?php echo $field; ?>', $<?php echo $field; ?>), array('class' => 'span6'))}}
+				{{ Form::select('<?php echo $field; ?>', $<?php echo substr($field, 0, -3); ?>, '', array('class' => 'form-control', 'placeholder' => '<?php echo ucwords(str_replace('_', ' ', $field)); ?>', 'id' => '<?php echo $field; ?>', 'required' => 'required')) }}
 <?php else: ?>
 <?php if(in_array($type, array('string', 'integer', 'float', 'date', 'timestamp'))): ?>
 				{{Form::text('<?php echo $field; ?>', Input::old('<?php echo $field; ?>'), array('class' => 'span6'))}}

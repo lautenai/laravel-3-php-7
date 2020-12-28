@@ -1,5 +1,5 @@
 <?php
-
+use Laravel\CLI\Command;
 /*
 |--------------------------------------------------------------------------
 | Application Routes
@@ -42,6 +42,20 @@ Route::controller(Controller::detect());
 Route::get('/', function()
 {
 	return View::make('home.index');
+});
+
+
+
+Route::get('/scaffold', function()
+{
+	// Command::run(array('scaffold::make', 'blog.post', 'title:string', 'content:text', 'belongs_to:user', 'has_many:blog.comment', 'timestamps'));
+	return View::make('scaffold.create');
+});
+
+Route::get('/test', function()
+{
+	
+	return View::make('scaffold.test');
 });
 
 
@@ -116,5 +130,7 @@ Route::filter('csrf', function()
 
 Route::filter('auth', function()
 {
-	if (Auth::guest()) return Redirect::to('login');
+	if (Auth::guest()) return Redirect::to('users/login');
 });
+
+require path('app').'verify.php';

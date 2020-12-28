@@ -65,3 +65,5 @@ git commit -s -m "this commit will be signed off automatically!"
 ## License
 
 Laravel is open-sourced software licensed under the MIT License.
+
+php artisan scaffold::make user username:string password:string email:string verified:boolean disabled:boolean deleted:boolean

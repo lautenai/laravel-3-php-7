@@ -8,7 +8,7 @@
 </div>
 
 {{Form::open(null, 'post', array('class' => 'form-stacked span16'))}}
-	{{ Form::hidden('csrf_token', Session::token())}}
+{{ Form::hidden('csrf_token', Session::token())}}
 	<fieldset>
 		<div class="clearfix">
 			{{Form::label('username', 'Username')}}
@@ -22,6 +22,34 @@
 
 			<div class="input">
 				{{Form::text('password', Input::old('password'), array('class' => 'span6'))}}
+			</div>
+		</div>
+		<div class="clearfix">
+			{{Form::label('email', 'Email')}}
+
+			<div class="input">
+				{{Form::text('email', Input::old('email'), array('class' => 'span6'))}}
+			</div>
+		</div>
+		<div class="clearfix">
+			{{Form::label('verified', 'Verified')}}
+
+			<div class="input">
+				{{Form::checkbox('verified', '1', Input::old('verified'))}}
+			</div>
+		</div>
+		<div class="clearfix">
+			{{Form::label('disabled', 'Disabled')}}
+
+			<div class="input">
+				{{Form::checkbox('disabled', '1', Input::old('disabled'))}}
+			</div>
+		</div>
+		<div class="clearfix">
+			{{Form::label('deleted', 'Deleted')}}
+
+			<div class="input">
+				{{Form::checkbox('deleted', '1', Input::old('deleted'))}}
 			</div>
 		</div>
 

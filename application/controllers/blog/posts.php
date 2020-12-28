@@ -36,9 +36,12 @@ class Blog_Posts_Controller extends Base_Controller {
 	 */
 	public function get_create($user_id = null)
 	{
+				
+		$user = array('' => 'SELECIONE') + User::order_by('id', 'asc')->take(999999)->lists('username', 'id');
+
 		$this->layout->title   = 'New Blog Post';
 		$this->layout->content = View::make('blog.posts.create', array(
-									'user_id' => $user_id,
+									'user' => $user,
 								));
 	}
 
@@ -112,8 +115,12 @@ class Blog_Posts_Controller extends Base_Controller {
 			return Redirect::to('blog/posts');
 		}
 
+				
+		$user = array('' => 'SELECIONE') + User::order_by('id', 'asc')->take(999999)->lists('username', 'id');
+
+
 		$this->layout->title   = 'Editing Blog Post';
-		$this->layout->content = View::make('blog.posts.edit')->with('post', $post);
+		$this->layout->content = View::make('blog.posts.edit')->with('post', $post)->with('user', $user);
 	}
 
 	/**

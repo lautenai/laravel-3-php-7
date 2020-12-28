@@ -16,7 +16,7 @@
 			{{Form::label('user_id', 'User Id')}}
 
 			<div class="input">
-				{{Form::text('user_id', Input::old('user_id', $user_id), array('class' => 'span6'))}}
+				{{ Form::select('user_id', $user, '', array('class' => 'form-control', 'placeholder' => 'User Id', 'id' => 'user_id', 'required' => 'required')) }}
 			</div>
 		</div>
 		<div class="clearfix">

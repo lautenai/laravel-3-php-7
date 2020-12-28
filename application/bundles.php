@@ -34,7 +34,7 @@
 */
 
 return array(
-
 	'docs' => array('handles' => 'docs'),
 	'scaffold',
+	'verify' => array('auto'	=>	true),
 );

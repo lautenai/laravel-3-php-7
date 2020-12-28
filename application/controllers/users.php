@@ -4,14 +4,17 @@ class Users_Controller extends Base_Controller {
 
 	public function __construct() {
 		parent::__construct();
+		// $this->filter('before', 'auth')->only(array('create', 'edit', 'delete'));
+		$this->filter('before', 'auth')->except(array('login'));
 		$this->filter('before', 'csrf')->on('post');
 	}
+
 	/**
 	 * The layout being used by the controller.
 	 *
 	 * @var string
 	 */
-	public $layout = 'layouts.scaffold';
+	public $layout = 'layouts.adminlte';
 
 	/**
 	 * Indicates if the controller uses RESTful routing.
@@ -27,10 +30,9 @@ class Users_Controller extends Base_Controller {
 	 */
 	public function get_index()
 	{
-		
-		$users = Cache::remember('users', function() {
-			return User::with(array('blog_posts', 'blog_comments'))->get();
-		}, 1);
+		Auth::user()->can('list_user') ? : 'Não autorizado: list_user';
+
+		$users = \Verify\Models\User::with(array('roles', 'roles.permissions'))->get();
 
 		$this->layout->title   = 'Users';
 		$this->layout->content = View::make('users.index')->with('users', $users);
@@ -43,6 +45,8 @@ class Users_Controller extends Base_Controller {
 	 */
 	public function get_create()
 	{
+		Auth::user()->can('create_user') ? : die('Não autorizado: create_user');
+
 		$this->layout->title   = 'New User';
 		$this->layout->content = View::make('users.create');
 	}
@@ -57,6 +61,10 @@ class Users_Controller extends Base_Controller {
 		$validation = Validator::make(Input::all(), array(
 			'username' => array('required'),
 			'password' => array('required'),
+			'email' => array('required'),
+			'verified' => array('in:0,1'),
+			'disabled' => array('in:0,1'),
+			'deleted' => array('in:0,1'),
 		));
 
 		if($validation->valid())
@@ -65,10 +73,12 @@ class Users_Controller extends Base_Controller {
 
 			$user->username = Input::get('username');
 			$user->password = Input::get('password');
+			$user->email = Input::get('email');
+			$user->verified = Input::get('verified', '0');
+			$user->disabled = Input::get('disabled', '0');
+			$user->deleted = Input::get('deleted', '0');
 
 			$user->save();
-
-			Cache::forget('users');
 
 			Session::flash('message', 'Added user #'.$user->id);
 
@@ -91,15 +101,17 @@ class Users_Controller extends Base_Controller {
 	 */
 	public function get_view($id)
 	{
-		$user = User::with(array('blog_posts', 'blog_comments'))->find_or_fail($id);
+		$user = \Verify\Models\User::with('roles')->find($id);
+
+		$roles = \Verify\Models\Role::all();
 
 		if(is_null($user))
 		{
-			// return Redirect::to('users');
+			return Redirect::to('users');
 		}
 
 		$this->layout->title   = 'Viewing User #'.$id;
-		$this->layout->content = View::make('users.view')->with('user', $user);
+		$this->layout->content = View::make('users.view', compact('user', 'roles'));
 	}
 
 	/**
@@ -110,7 +122,12 @@ class Users_Controller extends Base_Controller {
 	 */
 	public function get_edit($id)
 	{
-		$user = User::find($id);
+
+		Auth::user()->can('edit_user') ? : die('Não autorizado: edit_user');
+
+		$user = \Verify\Models\User::find($id);
+
+		$roles = \Verify\Models\Role::all();
 
 		if(is_null($user))
 		{
@@ -118,7 +135,7 @@ class Users_Controller extends Base_Controller {
 		}
 
 		$this->layout->title   = 'Editing User';
-		$this->layout->content = View::make('users.edit')->with('user', $user);
+		$this->layout->content = View::make('users.edit', compact('user', 'roles'));
 	}
 
 	/**
@@ -131,12 +148,16 @@ class Users_Controller extends Base_Controller {
 	{
 		$validation = Validator::make(Input::all(), array(
 			'username' => array('required'),
-			'password' => array('required'),
+			// 'password' => array('required'),
+			'email' => array('required'),
+			'verified' => array('in:0,1'),
+			'disabled' => array('in:0,1'),
+			'deleted' => array('in:0,1'),
 		));
 
 		if($validation->valid())
 		{
-			$user = User::find($id);
+			$user = \Verify\Models\User::find($id);
 
 			if(is_null($user))
 			{
@@ -144,12 +165,20 @@ class Users_Controller extends Base_Controller {
 			}
 
 			$user->username = Input::get('username');
-			$user->password = Input::get('password');
+
+			Input::has('password') ? $user->password = Input::get('password') : null;
+			
+			$user->email = Input::get('email');
+			$user->verified = Input::get('verified');
+			$user->disabled = Input::get('disabled');
+			$user->deleted = Input::get('deleted');
 
 			$user->save();
 
-			Cache::forget('users');
-
+			$roles = Input::get('roles');
+			
+			$user->roles()->sync($roles);
+			
 			Session::flash('message', 'Updated user #'.$user->id);
 
 			return Redirect::to('users');
@@ -177,11 +206,48 @@ class Users_Controller extends Base_Controller {
 		{
 			$user->delete();
 
-			Cache::forget('users');
-
 			Session::flash('message', 'Deleted user #'.$user->id);
 		}
 
 		return Redirect::to('users');
 	}
+
+	public function get_roles()
+	{
+		
+		$roles = \Verify\Models\Role::with('permissions')->get();
+
+		// $permissions = \Verify\Models\Permission::all();
+
+		$this->layout->title   = 'Viewing Roles';
+		$this->layout->content = View::make('users.roles', compact('roles'));
+	}
+
+	public function get_login()
+	{
+
+		$this->layout = false;
+		return View::make('users.login');
+	}
+
+	public function post_login()
+	{
+		$credentials = array('username' => Input::get('username'), 'password' => Input::get('password'));
+ 
+		if (Auth::attempt($credentials))
+		{
+		     return Redirect::to('users');
+		}
+	}
+
+	public function get_logout()
+	{
+		Auth::logout();
+
+		return Redirect::to('users');
+
+		// $this->layout->title   = 'User Login';
+		// $this->layout->content = View::make('users.login');
+	}
+
 }

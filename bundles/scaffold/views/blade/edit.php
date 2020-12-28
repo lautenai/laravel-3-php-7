@@ -17,14 +17,17 @@
 <?php foreach($fields as $field => $type): ?>
 		<div class="clearfix">
 			{{Form::label('<?php echo $field; ?>', '<?php echo ucwords(str_replace('_', ' ', $field)); ?>')}}
-
 			<div class="input">
+<?php if(strpos($field, '_id') !== false && in_array(substr($field, 0, -3), $belongs_to)): ?>
+		{{ Form::select('<?php echo $field; ?>', $<?php echo substr($field, 0, -3); ?>, $<?php echo $singular; ?>-><?php echo $field; ?>, array('id' => '<?php echo $field; ?>', 'class' => 'form-control', 'placeholder' => '<?php echo ucwords(str_replace('_', ' ', $field)); ?>', 'required' => 'required')) }}
+<?php else: ?>				
 <?php if(in_array($type, array('string', 'integer', 'float', 'date', 'timestamp'))): ?>
 				{{Form::text('<?php echo $field; ?>', Input::old('<?php echo $field; ?>', $<?php echo $singular; ?>-><?php echo $field; ?>), array('class' => 'span6'))}}
 <?php elseif($type == 'boolean'): ?>
 				{{Form::checkbox('<?php echo $field; ?>', '1', Input::old('<?php echo $field; ?>', $<?php echo $singular; ?>-><?php echo $field; ?>))}}
 <?php elseif($type == 'text' || $type == 'blob'): ?>
 				{{Form::textarea('<?php echo $field; ?>', Input::old('<?php echo $field; ?>', $<?php echo $singular; ?>-><?php echo $field; ?>), array('class' => 'span10'))}}
+<?php endif; ?>
 <?php endif; ?>
 			</div>
 		</div>

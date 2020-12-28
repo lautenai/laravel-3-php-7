@@ -40,13 +40,17 @@ class <?php echo $plural_class; ?>_Controller extends <?php echo $controller; ?>
 	 */
 	public function get_create(<?php echo $belongs_to_params; ?>)
 	{
+<?php foreach($belongs_to as $model): ?>				
+		$<?php echo $model; ?> = array('' => 'SELECIONE') + <?php echo ucfirst($model); ?>::order_by('id', 'asc')->take(999999)->lists('username', 'id');
+<?php endforeach; ?>
+
 		$this->layout->title   = 'New <?php echo str_replace('_', ' ', $singular_class); ?>';
 <?php if(count($belongs_to) == 0): ?>
 		$this->layout->content = View::make('<?php echo $nested_view.$plural; ?>.create');
 <?php else: ?>
 		$this->layout->content = View::make('<?php echo $nested_view.$plural; ?>.create', array(
 <?php foreach($belongs_to as $model): ?>
-									'<?php echo $model; ?>_id' => $<?php echo $model; ?>_id,
+									'<?php echo $model; ?>' => $<?php echo $model; ?>,
 <?php endforeach; ?>
 								));
 <?php endif; ?>
@@ -135,8 +139,13 @@ class <?php echo $plural_class; ?>_Controller extends <?php echo $controller; ?>
 			return Redirect::to('<?php echo $nested_path.$plural; ?>');
 		}
 
+<?php foreach($belongs_to as $model): ?>				
+		$<?php echo $model; ?> = array('' => 'SELECIONE') + <?php echo ucfirst($model); ?>::order_by('id', 'asc')->take(999999)->lists('username', 'id');
+<?php endforeach; ?>
+
+
 		$this->layout->title   = 'Editing <?php echo str_replace('_', ' ', $singular_class); ?>';
-		$this->layout->content = View::make('<?php echo $nested_view.$plural; ?>.edit')->with('<?php echo $singular; ?>', $<?php echo $singular; ?>);
+		$this->layout->content = View::make('<?php echo $nested_view.$plural; ?>.edit')->with('<?php echo $singular; ?>', $<?php echo $singular; ?>)<?php foreach($belongs_to as $model): ?>->with('<?php echo $model; ?>', $<?php echo $model; ?>)<?php endforeach; ?>;
 	}
 
 	/**
