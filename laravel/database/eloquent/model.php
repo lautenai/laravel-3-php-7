@@ -75,7 +75,7 @@ abstract class Model {
 	 *
 	 * @var bool
 	 */
-	public static $soft_deletes = true;
+	public static $soft_deletes = false;
 
 	/**
 	 * The name of the table associated with the model.
@@ -240,13 +240,6 @@ abstract class Model {
 	 * @param  array  $attributes
 	 * @return int
 	 */
-
-	/*public function updateOrCreate(array $attributes, array $values = [])
-    {
-        return tap($this->firstOrNew($attributes), function ($instance) use ($values) {
-            $instance->fill($values)->save();
-        });
-    }*/
 	public static function update_or_create(array $attributes, array $values = [])
 	{
 		$model = new static(array(), true);
@@ -257,7 +250,7 @@ abstract class Model {
 			return $model->query()->where($model->key(), '=', $id)->update($model->attributes);
 		} else {
 			return $model->create($attributes + $values);
-		}		
+		}
 	}
 
 	/**

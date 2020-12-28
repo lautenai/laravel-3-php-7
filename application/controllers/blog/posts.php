@@ -23,7 +23,24 @@ class Blog_Posts_Controller extends Base_Controller {
 	 */
 	public function get_index()
 	{
-		$posts = Blog_Post::with(array('user', 'blog_comments'))->trashed();
+		$posts = Blog_Post::with(array('user', 'blog_comments'))->order_by('user_id')->active();
+
+		$this->layout->title   = 'Blog Posts';
+		$this->layout->content = View::make('blog.posts.index')->with('posts', $posts);
+	}
+
+
+	public function get_withtrashed()
+	{
+		$posts = Blog_Post::with(array('user', 'blog_comments'))->order_by('user_id')->withtrashed();
+
+		$this->layout->title   = 'Blog Posts';
+		$this->layout->content = View::make('blog.posts.index')->with('posts', $posts);
+	}
+
+	public function get_trashed()
+	{
+		$posts = Blog_Post::with(array('user', 'blog_comments'))->order_by('user_id')->trashed();
 
 		$this->layout->title   = 'Blog Posts';
 		$this->layout->content = View::make('blog.posts.index')->with('posts', $posts);
@@ -35,20 +52,8 @@ class Blog_Posts_Controller extends Base_Controller {
 	 * @return void
 	 */
 	public function get_create($user_id = null)
-	{
-		$post = new Blog_Post;
-
-		$post->user_id = 5;
-		$post->title = 'title';
-		$post->content = 'content';
-
-		$post->update_or_create(['user_id' => rand(1,11), 'title' => 'title'], ['content' => time()]);
-
-		echo $post->id;
-
-		die();
-				
-		$user = array('' => 'SELECIONE') + User::order_by('id', 'asc')->take(999999)->lists('username', 'id');
+	{				
+		$user = array('' => 'SELECIONE') + User::where_null('deleted_at')->order_by('id', 'asc')->take(999999)->lists('username', 'id');
 
 		$this->layout->title   = 'New Blog Post';
 		$this->layout->content = View::make('blog.posts.create', array(
@@ -90,6 +95,19 @@ class Blog_Posts_Controller extends Base_Controller {
 					->with_errors($validation->errors)
 					->with_input();
 		}
+
+		/*
+		$post = new Blog_Post;
+
+		$post->user_id = 5;
+		$post->title = 'title';
+		$post->content = 'content';
+
+		$post->update_or_create(
+			['user_id' => rand(5,9), 'title' => 'title'],
+			['content' => date('H:i:s')]
+		);
+		*/
 	}
 
 	/**

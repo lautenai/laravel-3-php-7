@@ -110,15 +110,6 @@ class Query {
 	 * @param  array  $columns
 	 * @return mixed
 	 */
-
-	/*public function firstOrNew(array $attributes = [], array $values = [])
-    {
-        if (! is_null($instance = $this->where($attributes)->first())) {
-            return $instance;
-        }
-
-        return $this->newModelInstance($attributes + $values);
-    }*/
 	public function first_or_new(array $attributes = [], array $values = [])
 	{
 		$model = $this->model;
@@ -144,6 +135,28 @@ class Query {
 	}
 
 	/**
+	 * Get withtrashed of the model results for the query.
+	 *
+	 * @param  array  $columns
+	 * @return array
+	 */
+	public function withtrashed($columns = array('*'))
+	{
+		return $this->hydrate($this->model, $this->table->get($columns));
+	}
+
+	/**
+	 * Get withtrashed of the model results for the query.
+	 *
+	 * @param  array  $columns
+	 * @return array
+	 */
+	public function active($columns = array('*'))
+	{
+		return $this->hydrate($this->model, $this->table->where_null('deleted_at')->get($columns));
+	}
+
+	/**
 	 * Get all of the model results for the query.
 	 *
 	 * @param  array  $columns
@@ -154,7 +167,6 @@ class Query {
 		return $this->hydrate($this->model, $this->table->get($columns));
 	}
 	
-
 	/**
 	 * Get an array of paginated model results.
 	 *
