@@ -35,4 +35,25 @@ class Blog_Post extends Eloquent {
 	{
 		return $this->has_many('Blog_Comment');
 	}
+
+	public function get_created_at()
+	{
+	    return date('d/m/Y H:i:s', strtotime($this->get_attribute('created_at')));
+	}
+
+	public function get()
+	{
+	    return $this->where_null('deleted_at')->get();
+	}
+
+	public function withtrashed()
+	{
+	    return $this->where_not_null('deleted_at')->get();
+	}
+
+	public function delete()
+	{
+	    $this->deleted_at = date('Y-m-d H:i:s');
+	    $this->save();
+	}
 }
