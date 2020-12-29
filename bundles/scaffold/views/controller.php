@@ -1,13 +1,20 @@
 <?php echo '<?php'.PHP_EOL; ?>
 
 class <?php echo $plural_class; ?>_Controller extends <?php echo $controller; ?> {
+	
+	public function __construct() {
+		parent::__construct();
+		// $this->filter('before', 'auth')->only(array('create', 'edit', 'delete'));
+		$this->filter('before', 'auth')->except(array('login'));
+		$this->filter('before', 'csrf')->on('post');
+	}
 
 	/**
 	 * The layout being used by the controller.
 	 *
 	 * @var string
 	 */
-	public $layout = 'layouts.scaffold';
+	public $layout = 'layouts.adminlte';
 
 	/**
 	 * Indicates if the controller uses RESTful routing.
@@ -41,7 +48,7 @@ class <?php echo $plural_class; ?>_Controller extends <?php echo $controller; ?>
 	public function get_create(<?php echo $belongs_to_params; ?>)
 	{
 <?php foreach($belongs_to as $model): ?>				
-		$<?php echo $model; ?> = array('' => 'SELECIONE') + <?php echo ucfirst($model); ?>::order_by('id', 'asc')->take(999999)->lists('username', 'id');
+		$<?php echo $model; ?> = array('' => 'SELECIONE') + <?php echo ucfirst($model); ?>::order_by('id', 'asc')->take(999999)->lists('id', 'id');
 <?php endforeach; ?>
 
 		$this->layout->title   = 'New <?php echo str_replace('_', ' ', $singular_class); ?>';
@@ -138,11 +145,10 @@ class <?php echo $plural_class; ?>_Controller extends <?php echo $controller; ?>
 		{
 			return Redirect::to('<?php echo $nested_path.$plural; ?>');
 		}
-
+		
 <?php foreach($belongs_to as $model): ?>				
-		$<?php echo $model; ?> = array('' => 'SELECIONE') + <?php echo ucfirst($model); ?>::order_by('id', 'asc')->take(999999)->lists('username', 'id');
+		$<?php echo $model; ?> = array('' => 'SELECIONE') + <?php echo ucfirst($model); ?>::order_by('id', 'asc')->take(999999)->lists('id', 'id');
 <?php endforeach; ?>
-
 
 		$this->layout->title   = 'Editing <?php echo str_replace('_', ' ', $singular_class); ?>';
 		$this->layout->content = View::make('<?php echo $nested_view.$plural; ?>.edit')->with('<?php echo $singular; ?>', $<?php echo $singular; ?>)<?php foreach($belongs_to as $model): ?>->with('<?php echo $model; ?>', $<?php echo $model; ?>)<?php endforeach; ?>;

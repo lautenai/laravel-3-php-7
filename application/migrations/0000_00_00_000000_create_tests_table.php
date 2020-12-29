@@ -1,6 +1,6 @@
 <?php
 
-class Create_Blog_Posts_Table {
+class Create_Tests_Table {
 
 	/**
 	 * Make changes to the database.
@@ -9,13 +9,15 @@ class Create_Blog_Posts_Table {
 	 */
 	public function up()
 	{	
-		Schema::create('blog_posts', function($table)
+		Schema::create('tests', function($table)
 		{
 			$table->increments('id');
 
 			$table->integer('user_id');
-			$table->string('title');
-			$table->text('content');
+			$table->string('name');
+			$table->string('surname');
+			$table->boolean('active');
+			$table->date('data');
 
 			$table->timestamps();
 		});
@@ -28,7 +30,7 @@ class Create_Blog_Posts_Table {
 	 */
 	public function down()
 	{
-		Schema::drop('blog_posts');
+		Schema::drop('tests');
 	}
 
 }

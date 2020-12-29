@@ -1,5 +1,5 @@
 <section class="content-header">
-  <h1>Users <a class="btn btn-success" href="{{URL::to('users/create')}}">Create new User</a></h1>
+  <h1>Users <a class="btn btn-success" href="{{URL::to('auth/users/create')}}">Create new User</a></h1>
   <ol class="breadcrumb">
     <li><a href="#"><i class="fa fa-dashboard"></i> Dashboard</a></li>
     <li><a href="#">Users</a></li>
@@ -9,7 +9,7 @@
 
 <section class="content">
   <div class="box box-primary">
-    <div class="box-body table-responsive no-padding">
+    <div class="box-body table-responsive">
 			@if(count($users) == 0)
 				<p>No users.</p>
 			@else
@@ -45,9 +45,9 @@
 								<td>{{($user->disabled) ? '<span class="label label-success"><i class="fa fa-fw fa-circle"></i></span>' : '<span class="label label-danger"><i class="fa fa-fw fa-circle"></i></span>'}}</td>
 								<td>{{($user->deleted) ? '<span class="label label-success"><i class="fa fa-fw fa-circle"></i></span>' : '<span class="label label-danger"><i class="fa fa-fw fa-circle"></i></span>'}}</td>
 								<td>
-									<a href="{{URL::to('users/view/'.$user->id)}}"><span class="label label-success"><i class="fa fa-fw fa-eye"></i></span></a>
-									<a href="{{URL::to('users/edit/'.$user->id)}}"><span class="label label-warning"><i class="fa fa-fw fa-edit"></i></span></a>
-									<a href="{{URL::to('users/delete/'.$user->id)}}" onclick="return confirm('Are you sure?')"><span class="label label-danger"><i class="fa fa-fw fa-remove"></i></span></a>
+									<a href="{{URL::to('auth/users/view/'.$user->id)}}"><span class="label label-success"><i class="fa fa-fw fa-eye"></i></span></a>
+									<a href="{{URL::to('auth/users/edit/'.$user->id)}}"><span class="label label-warning"><i class="fa fa-fw fa-edit"></i></span></a>
+									<a href="{{URL::to('auth/users/delete/'.$user->id)}}" onclick="return confirm('Are you sure?')"><span class="label label-danger"><i class="fa fa-fw fa-remove"></i></span></a>
 								</td>
 							</tr>
 						@endforeach

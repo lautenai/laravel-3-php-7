@@ -1,13 +1,13 @@
 <?php
 
-class Blog_Comment extends Eloquent {
+class Test extends Eloquent {
 
 	/**
 	 * The name of the table associated with the model.
 	 *
 	 * @var string
 	 */
-	public static $table = 'blog_comments';
+	public static $table = 'tests';
 
 	/**
 	 * Indicates if the model has update and creation timestamps.
@@ -15,25 +15,33 @@ class Blog_Comment extends Eloquent {
 	 * @var bool
 	 */
 	public static $timestamps = true;
+	
+	public static $soft_deletes = true;
+
 
 	/**
-	 * Establish the relationship between a comment and a blog post.
-	 *
-	 * @return Laravel\Database\Eloquent\Relationships\Belongs_To
-	 */
-	public function blog_post()
-	{
-		return $this->belongs_to('Blog_Post');
-	}
-
-	/**
-	 * Establish the relationship between a comment and a user.
+	 * Establish the relationship between a test and a user.
 	 *
 	 * @return Laravel\Database\Eloquent\Relationships\Belongs_To
 	 */
 	public function user()
 	{
 		return $this->belongs_to('User');
+	}
+
+	/**
+	 * Establish the relationship between a test and blog comments.
+	 *
+	 * @return Laravel\Database\Eloquent\Relationships\Has_Many
+	 */
+	public function blog_comments()
+	{
+		return $this->has_many('Blog_Comment');
+	}
+
+	public function get_data()
+	{
+	    return $this->get_attribute('data') ? date('d/m/Y', strtotime($this->get_attribute('data'))) : null;
 	}
 
 	public function get_created()

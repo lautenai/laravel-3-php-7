@@ -324,6 +324,8 @@ class Table {
 		$this->date('created_at');
 
 		$this->date('updated_at');
+		
+		$this->date('deleted_at');
 	}
 
 	/**

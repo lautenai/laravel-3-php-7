@@ -1,43 +1,43 @@
-<div class="span16">
-	<ul class="breadcrumb span6">
+<section class="content-header">
+  <h1>
+    <?php echo ucwords(str_replace('_', ' ', $plural)); ?> <a class="btn btn-success" href="{{URL::to('<?php echo $nested_path.$plural; ?>')}}"><?php echo ucwords(str_replace('_', ' ', $plural)); ?></a>
+  </h1>
+  <ol class="breadcrumb">
+    <li><a href="#"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+    <li><a href="{{URL::to('<?php echo $nested_path.$plural; ?>')}}"><?php echo str_replace('_', ' ', $plural_class); ?></a></li>
+    <li class="active">New <?php echo str_replace('_', ' ', $singular_class); ?></li>
 <?php if( ! empty($belongs_to)): ?>
-		<li>
-			<a href="{{URL::to('<?php echo $url[$belongs_to[0]]; ?>')}}"><?php echo ucwords(str_replace('_', ' ', Str::plural($belongs_to[0]))); ?></a> <span class="divider">/</span>
-		</li>
-<?php endif; ?>
-		<li>
-			<a href="{{URL::to('<?php echo $nested_path.$plural; ?>')}}"><?php echo str_replace('_', ' ', $plural_class); ?></a> <span class="divider">/</span>
-		</li>
-		<li class="active">New <?php echo str_replace('_', ' ', $singular_class); ?></li>
-	</ul>
-</div>
+    <!--<li><a href="{{URL::to('<?php echo $url[$belongs_to[0]]; ?>')}}"><i class="fa fa-dashboard"></i> <?php echo ucwords(str_replace('_', ' ', Str::plural($belongs_to[0]))); ?></a></li>-->
+<?php endif; ?>    
+  </ol>
+</section>
 
-{{Form::open(null, 'post', array('class' => 'form-stacked span16'))}}
-	<fieldset>
+<section class="content">
+  <div class="box box-primary">
+    <div class="box-body">
+		{{Form::open(null, 'post', array('role' => 'form'))}}
+		{{ Form::hidden('csrf_token', Session::token())}}
 <?php foreach($fields as $field => $type): ?>
-		<div class="clearfix">
-			{{Form::label('<?php echo $field; ?>', '<?php echo ucwords(str_replace('_', ' ', $field)); ?>')}}
-
-			<div class="input">
+			<div class="form-group">
+				{{Form::label('<?php echo $field; ?>', '<?php echo ucwords(str_replace('_', ' ', $field)); ?>')}}
 <?php if(strpos($field, '_id') !== false && in_array(substr($field, 0, -3), $belongs_to)): ?>
 				{{ Form::select('<?php echo $field; ?>', $<?php echo substr($field, 0, -3); ?>, '', array('class' => 'form-control', 'placeholder' => '<?php echo ucwords(str_replace('_', ' ', $field)); ?>', 'id' => '<?php echo $field; ?>', 'required' => 'required')) }}
 <?php else: ?>
 <?php if(in_array($type, array('string', 'integer', 'float', 'date', 'timestamp'))): ?>
-				{{Form::text('<?php echo $field; ?>', Input::old('<?php echo $field; ?>'), array('class' => 'span6'))}}
+				{{Form::text('<?php echo $field; ?>', Input::old('<?php echo $field; ?>'), array('class' => 'form-control', 'placeholder' => '<?php echo ucwords(str_replace('_', ' ', $field)); ?>', 'required' => 'required'))}}
 <?php elseif($type == 'boolean'): ?>
 				{{Form::checkbox('<?php echo $field; ?>', '1', Input::old('<?php echo $field; ?>'))}}
 <?php elseif($type == 'text' || $type == 'blob'): ?>
-				{{Form::textarea('<?php echo $field; ?>', Input::old('<?php echo $field; ?>'), array('class' => 'span10'))}}
+				{{Form::textarea('<?php echo $field; ?>', Input::old('<?php echo $field; ?>'), array('class' => 'form-control', 'placeholder' => '<?php echo ucwords(str_replace('_', ' ', $field)); ?>', 'required' => 'required'))}}
 <?php endif; ?>
 <?php endif; ?>
 			</div>
-		</div>
 <?php endforeach; ?>
-
-		<div class="actions">
-			{{Form::submit('Save', array('class' => 'btn primary'))}}
-
-			or <a href="{{URL::to(Request::referrer())}}">Cancel</a>
+    </div>
+		<div class="box-footer">
+			{{Form::submit('Salvar', array('class' => 'btn btn-primary'))}}
+			ou <a href="{{URL::to(Request::referrer())}}">Cancelar</a>
 		</div>
-	</fieldset>
-{{Form::close()}}
+		{{Form::close()}}
+  </div>
+</section>

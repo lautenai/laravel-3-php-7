@@ -15,6 +15,9 @@ class <?php echo $singular_class; ?> extends Eloquent {
 	 * @var bool
 	 */
 	public static $timestamps = <?php echo ($timestamps) ? 'true' : 'false'; ?>;
+	
+	public static $soft_deletes = true;
+
 <?php foreach($relationships as $relationship => $models): ?>
 <?php foreach($models as $model): ?>
 
@@ -38,4 +41,19 @@ class <?php echo $singular_class; ?> extends Eloquent {
 	}
 <?php endforeach; ?>
 <?php endforeach; ?>
+
+	public function get_created()
+	{
+	    return date('d/m/Y H:i:s', strtotime($this->get_attribute('created_at')));
+	}
+
+	public function get_updated()
+	{
+	    return $this->get_attribute('updated_at') ? date('d/m/Y H:i:s', strtotime($this->get_attribute('updated_at'))) : null;
+	}
+
+	public function get_deleted()
+	{
+	    return $this->get_attribute('deleted_at') ? date('d/m/Y H:i:s', strtotime($this->get_attribute('deleted_at'))) : null;
+	}
 }

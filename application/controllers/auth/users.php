@@ -1,6 +1,6 @@
 <?php
 
-class Users_Controller extends Base_Controller {
+class Auth_Users_Controller extends Base_Controller {
 
 	public function __construct() {
 		parent::__construct();
@@ -35,7 +35,7 @@ class Users_Controller extends Base_Controller {
 		$users = \Verify\Models\User::with(array('roles', 'roles.permissions'))->order_by('username')->get();
 
 		$this->layout->title   = 'Users';
-		$this->layout->content = View::make('users.index')->with('users', $users);
+		$this->layout->content = View::make('auth.users.index')->with('users', $users);
 	}
 
 	/**
@@ -50,7 +50,7 @@ class Users_Controller extends Base_Controller {
 		$roles = \Verify\Models\Role::all();
 
 		$this->layout->title   = 'New User';
-		$this->layout->content = View::make('users.create', compact('roles'));
+		$this->layout->content = View::make('auth.users.create', compact('roles'));
 	}
 
 	/**
@@ -82,14 +82,18 @@ class Users_Controller extends Base_Controller {
 
 			$user->save();
 
+			$roles = Input::get('roles');
+			
+			$user->roles()->sync($roles);
+
 			Session::flash('message', 'Added user #'.$user->id);
 
-			return Redirect::to('users');
+			return Redirect::to('auth/users');
 		}
 
 		else
 		{
-			return Redirect::to('users/create')
+			return Redirect::to('auth/users/create')
 					->with_errors($validation->errors)
 					->with_input();
 		}
@@ -109,11 +113,11 @@ class Users_Controller extends Base_Controller {
 
 		if(is_null($user))
 		{
-			return Redirect::to('users');
+			return Redirect::to('auth/users');
 		}
 
 		$this->layout->title   = 'Viewing User #'.$id;
-		$this->layout->content = View::make('users.view', compact('user', 'roles'));
+		$this->layout->content = View::make('auth.users.view', compact('user', 'roles'));
 	}
 
 	/**
@@ -133,11 +137,11 @@ class Users_Controller extends Base_Controller {
 
 		if(is_null($user))
 		{
-			return Redirect::to('users');
+			return Redirect::to('auth/users');
 		}
 
 		$this->layout->title   = 'Editing User';
-		$this->layout->content = View::make('users.edit', compact('user', 'roles'));
+		$this->layout->content = View::make('auth.users.edit', compact('user', 'roles'));
 	}
 
 	/**
@@ -163,7 +167,7 @@ class Users_Controller extends Base_Controller {
 
 			if(is_null($user))
 			{
-				return Redirect::to('users');
+				return Redirect::to('auth/users');
 			}
 
 			$user->username = Input::get('username');
@@ -183,12 +187,12 @@ class Users_Controller extends Base_Controller {
 			
 			Session::flash('message', 'Updated user #'.$user->id);
 
-			return Redirect::to('users');
+			return Redirect::to('auth/users');
 		}
 
 		else
 		{
-			return Redirect::to('users/edit/'.$id)
+			return Redirect::to('auth/users/edit/'.$id)
 					->with_errors($validation->errors)
 					->with_input();
 		}
@@ -211,7 +215,7 @@ class Users_Controller extends Base_Controller {
 			Session::flash('message', 'Deleted user #'.$user->id);
 		}
 
-		return Redirect::to('users');
+		return Redirect::to('auth/users');
 	}
 
 	public function get_roles()
@@ -222,14 +226,14 @@ class Users_Controller extends Base_Controller {
 		// $permissions = \Verify\Models\Permission::all();
 
 		$this->layout->title   = 'Viewing Roles';
-		$this->layout->content = View::make('users.roles', compact('roles'));
+		$this->layout->content = View::make('auth.users.roles', compact('roles'));
 	}
 
 	public function get_login()
 	{
 
 		$this->layout = false;
-		return View::make('users.login');
+		return View::make('auth.users.login');
 	}
 
 	public function post_login()
@@ -238,7 +242,7 @@ class Users_Controller extends Base_Controller {
  
 		if (Auth::attempt($credentials))
 		{
-		     return Redirect::to('users');
+		     return Redirect::to('auth/users');
 		}
 	}
 
@@ -246,10 +250,10 @@ class Users_Controller extends Base_Controller {
 	{
 		Auth::logout();
 
-		return Redirect::to('users');
+		return Redirect::to('auth/users');
 
 		// $this->layout->title   = 'User Login';
-		// $this->layout->content = View::make('users.login');
+		// $this->layout->content = View::make('auth.users.login');
 	}
 
 }

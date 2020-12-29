@@ -130,7 +130,7 @@ Route::filter('csrf', function()
 
 Route::filter('auth', function()
 {
-	if (Auth::guest()) return Redirect::to('users/login');
+	if (Auth::guest()) return Redirect::to('auth/users/login');
 });
 
 require path('app').'verify.php';
