@@ -21,7 +21,6 @@
 						<th>Surname</th>
 						<th>Active</th>
 						<th>Data</th>
-						<th>Blog Comments</th>
 						<th style="width: 101px;"></th>
 					</tr>
 				</thead>
@@ -33,7 +32,6 @@
 							<td>{{$test->surname}}</td>
 							<td>{{($test->active) ? 'True' : 'False'}}</td>
 							<td>{{$test->data}}</td>
-							<td>{{count($test->blog_comments)}}</td>
 							<td>
 								<a href="{{URL::to('tests/view/'.$test->id)}}"><span class="label label-success"><i class="fa fa-fw fa-eye"></i></span></a>
 								<a href="{{URL::to('tests/edit/'.$test->id)}}"><span class="label label-warning"><i class="fa fa-fw fa-edit"></i></span></a>

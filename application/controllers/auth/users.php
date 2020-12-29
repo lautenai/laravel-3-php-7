@@ -30,7 +30,8 @@ class Auth_Users_Controller extends Base_Controller {
 	 */
 	public function get_index()
 	{
-		Auth::user()->can('list_user') ? : 'Não autorizado: list_user';
+		// Auth::user()->can('list_user') ? : 'Não autorizado: list_user';
+		Acl::can('list_user');
 
 		$users = \Verify\Models\User::with(array('roles', 'roles.permissions'))->order_by('username')->get();
 

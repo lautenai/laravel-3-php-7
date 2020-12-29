@@ -29,19 +29,9 @@ class Test extends Eloquent {
 		return $this->belongs_to('User');
 	}
 
-	/**
-	 * Establish the relationship between a test and blog comments.
-	 *
-	 * @return Laravel\Database\Eloquent\Relationships\Has_Many
-	 */
-	public function blog_comments()
-	{
-		return $this->has_many('Blog_Comment');
-	}
-
 	public function get_data()
 	{
-	    return $this->get_attribute('data') ? date('d/m/Y', strtotime($this->get_attribute('data'))) : null;
+	    return $this->get_attribute('data') ? date('d/m/Y H:i:s', strtotime($this->get_attribute('data'))) : null;
 	}
 
 	public function get_created()
@@ -57,5 +47,16 @@ class Test extends Eloquent {
 	public function get_deleted()
 	{
 	    return $this->get_attribute('deleted_at') ? date('d/m/Y H:i:s', strtotime($this->get_attribute('deleted_at'))) : null;
+	}
+
+	public static function permissoes()
+	{
+		DB::query("INSERT INTO permissions (permissions.name, permissions.group) SELECT * FROM (SELECT 'get_tests_index', 'tests') AS tmp WHERE NOT EXISTS (SELECT name FROM permissions WHERE permissions.name = 'get_tests_index' AND permissions.group = 'tests') LIMIT 1;");
+		DB::query("INSERT INTO permissions (permissions.name, permissions.group) SELECT * FROM (SELECT 'get_tests_create', 'tests') AS tmp WHERE NOT EXISTS (SELECT name FROM permissions WHERE permissions.name = 'get_tests_create' AND permissions.group = 'tests') LIMIT 1;");
+		DB::query("INSERT INTO permissions (permissions.name, permissions.group) SELECT * FROM (SELECT 'post_tests_create', 'tests') AS tmp WHERE NOT EXISTS (SELECT name FROM permissions WHERE permissions.name = 'post_tests_create' AND permissions.group = 'tests') LIMIT 1;");
+		DB::query("INSERT INTO permissions (permissions.name, permissions.group) SELECT * FROM (SELECT 'get_tests_view', 'tests') AS tmp WHERE NOT EXISTS (SELECT name FROM permissions WHERE permissions.name = 'get_tests_view' AND permissions.group = 'tests') LIMIT 1;");
+		DB::query("INSERT INTO permissions (permissions.name, permissions.group) SELECT * FROM (SELECT 'get_tests_edit', 'tests') AS tmp WHERE NOT EXISTS (SELECT name FROM permissions WHERE permissions.name = 'get_tests_edit' AND permissions.group = 'tests') LIMIT 1;");
+		DB::query("INSERT INTO permissions (permissions.name, permissions.group) SELECT * FROM (SELECT 'post_tests_edit', 'tests') AS tmp WHERE NOT EXISTS (SELECT name FROM permissions WHERE permissions.name = 'post_tests_edit' AND permissions.group = 'tests') LIMIT 1;");
+		DB::query("INSERT INTO permissions (permissions.name, permissions.group) SELECT * FROM (SELECT 'get_tests_delete', 'tests') AS tmp WHERE NOT EXISTS (SELECT name FROM permissions WHERE permissions.name = 'get_tests_delete' AND permissions.group = 'tests') LIMIT 1;");
 	}
 }

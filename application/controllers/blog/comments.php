@@ -1,13 +1,23 @@
 <?php
 
 class Blog_Comments_Controller extends Base_Controller {
+	
+	public function __construct() {
+		parent::__construct();
+		// $this->filter('before', 'auth')->only(array('create', 'edit', 'delete'));
+		$this->filter('before', 'auth')->except(array('login'));
+		$this->filter('before', 'csrf')->on('post');
+
+		//insert permissions to database
+		Blog_Comment::permissoes();
+	}
 
 	/**
 	 * The layout being used by the controller.
 	 *
 	 * @var string
 	 */
-	public $layout = 'layouts.scaffold';
+	public $layout = 'layouts.adminlte';
 
 	/**
 	 * Indicates if the controller uses RESTful routing.
@@ -23,6 +33,8 @@ class Blog_Comments_Controller extends Base_Controller {
 	 */
 	public function get_index()
 	{
+		// Acl::can('get_comments_index');
+
 		$comments = Blog_Comment::with(array('blog_post', 'user'))->get();
 
 		$this->layout->title   = 'Blog Comments';
@@ -36,10 +48,17 @@ class Blog_Comments_Controller extends Base_Controller {
 	 */
 	public function get_create($blog_post_id = null, $user_id = null)
 	{
+		Acl::can('get_comments_create');
+
+				
+		$blog_post = array('' => 'SELECIONE') + Blog_post::order_by('id', 'asc')->take(999999)->lists('id', 'id');
+				
+		$user = array('' => 'SELECIONE') + User::order_by('id', 'asc')->take(999999)->lists('id', 'id');
+
 		$this->layout->title   = 'New Blog Comment';
 		$this->layout->content = View::make('blog.comments.create', array(
-									'blog_post_id' => $blog_post_id,
-									'user_id' => $user_id,
+									'blog_post' => $blog_post,
+									'user' => $user,
 								));
 	}
 
@@ -50,6 +69,8 @@ class Blog_Comments_Controller extends Base_Controller {
 	 */
 	public function post_create()
 	{
+		Acl::can('post_comments_create');
+
 		$validation = Validator::make(Input::all(), array(
 			'user_id' => array('required', 'integer'),
 			'blog_post_id' => array('required', 'integer'),
@@ -87,6 +108,8 @@ class Blog_Comments_Controller extends Base_Controller {
 	 */
 	public function get_view($id)
 	{
+		Acl::can('get_comments_view');
+
 		$comment = Blog_Comment::with(array('blog_post', 'user'))->find($id);
 
 		if(is_null($comment))
@@ -106,15 +129,22 @@ class Blog_Comments_Controller extends Base_Controller {
 	 */
 	public function get_edit($id)
 	{
+		Acl::can('get_comments_edit');
+
 		$comment = Blog_Comment::find($id);
 
 		if(is_null($comment))
 		{
 			return Redirect::to('blog/comments');
 		}
+		
+				
+		$blog_post = array('' => 'SELECIONE') + Blog_post::order_by('id', 'asc')->take(999999)->lists('id', 'id');
+				
+		$user = array('' => 'SELECIONE') + User::order_by('id', 'asc')->take(999999)->lists('id', 'id');
 
 		$this->layout->title   = 'Editing Blog Comment';
-		$this->layout->content = View::make('blog.comments.edit')->with('comment', $comment);
+		$this->layout->content = View::make('blog.comments.edit')->with('comment', $comment)->with('blog_post', $blog_post)->with('user', $user);
 	}
 
 	/**
@@ -125,6 +155,8 @@ class Blog_Comments_Controller extends Base_Controller {
 	 */
 	public function post_edit($id)
 	{
+		Acl::can('post_comments_edit');
+
 		$validation = Validator::make(Input::all(), array(
 			'user_id' => array('required', 'integer'),
 			'blog_post_id' => array('required', 'integer'),
@@ -167,6 +199,8 @@ class Blog_Comments_Controller extends Base_Controller {
 	 */
 	public function get_delete($id)
 	{
+		Acl::can('get_comments_delete');
+
 		$comment = Blog_Comment::find($id);
 
 		if( ! is_null($comment))

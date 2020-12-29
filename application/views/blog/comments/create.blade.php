@@ -1,43 +1,38 @@
-<div class="span16">
-	<ul class="breadcrumb span6">
-		<li>
-			<a href="{{URL::to('blog/posts')}}">Blog Posts</a> <span class="divider">/</span>
-		</li>
-		<li>
-			<a href="{{URL::to('blog/comments')}}">Blog Comments</a> <span class="divider">/</span>
-		</li>
-		<li class="active">New Blog Comment</li>
-	</ul>
-</div>
+<section class="content-header">
+  <h1>
+    Comments <a class="btn btn-success" href="{{URL::to('blog/comments')}}">Comments</a>
+  </h1>
+  <ol class="breadcrumb">
+    <li><a href="#"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+    <li><a href="{{URL::to('blog/comments')}}">Blog Comments</a></li>
+    <li class="active">New Blog Comment</li>
+    <!--<li><a href="{{URL::to('blog/posts')}}"><i class="fa fa-dashboard"></i> Blog Posts</a></li>-->
+    
+  </ol>
+</section>
 
-{{Form::open(null, 'post', array('class' => 'form-stacked span16'))}}
-	<fieldset>
-		<div class="clearfix">
-			{{Form::label('user_id', 'User Id')}}
-
-			<div class="input">
-				{{Form::text('user_id', Input::old('user_id', $user_id), array('class' => 'span6'))}}
+<section class="content">
+  <div class="box box-primary">
+    <div class="box-body">
+		{{Form::open(null, 'post', array('role' => 'form'))}}
+		{{ Form::hidden('csrf_token', Session::token())}}
+			<div class="form-group">
+				{{Form::label('user_id', 'User Id')}}
+				{{ Form::select('user_id', $user, '', array('class' => 'form-control', 'placeholder' => 'User Id', 'id' => 'user_id', 'required' => 'required')) }}
 			</div>
-		</div>
-		<div class="clearfix">
-			{{Form::label('blog_post_id', 'Blog Post Id')}}
-
-			<div class="input">
-				{{Form::text('blog_post_id', Input::old('blog_post_id', $blog_post_id), array('class' => 'span6'))}}
+			<div class="form-group">
+				{{Form::label('blog_post_id', 'Blog Post Id')}}
+				{{ Form::select('blog_post_id', $blog_post, '', array('class' => 'form-control', 'placeholder' => 'Blog Post Id', 'id' => 'blog_post_id', 'required' => 'required')) }}
 			</div>
-		</div>
-		<div class="clearfix">
-			{{Form::label('content', 'Content')}}
-
-			<div class="input">
-				{{Form::textarea('content', Input::old('content'), array('class' => 'span10'))}}
+			<div class="form-group">
+				{{Form::label('content', 'Content')}}
+				{{Form::textarea('content', Input::old('content'), array('class' => 'form-control', 'placeholder' => 'Content', 'required' => 'required'))}}
 			</div>
+    </div>
+		<div class="box-footer">
+			{{Form::submit('Salvar', array('class' => 'btn btn-primary'))}}
+			ou <a href="{{URL::to(Request::referrer())}}">Cancelar</a>
 		</div>
-
-		<div class="actions">
-			{{Form::submit('Save', array('class' => 'btn primary'))}}
-
-			or <a href="{{URL::to(Request::referrer())}}">Cancel</a>
-		</div>
-	</fieldset>
-{{Form::close()}}
+		{{Form::close()}}
+  </div>
+</section>

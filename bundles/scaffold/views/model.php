@@ -42,6 +42,15 @@ class <?php echo $singular_class; ?> extends Eloquent {
 <?php endforeach; ?>
 <?php endforeach; ?>
 
+<?php foreach($fields as $field => $type): ?>
+<?php if($type == 'date'): ?>
+	public function get_<?php echo $field?>()
+	{
+	    return $this->get_attribute('<?php echo $field?>') ? date('d/m/Y H:i:s', strtotime($this->get_attribute('<?php echo $field?>'))) : null;
+	}
+<?php endif; ?>
+<?php endforeach; ?>
+
 	public function get_created()
 	{
 	    return date('d/m/Y H:i:s', strtotime($this->get_attribute('created_at')));
@@ -55,5 +64,16 @@ class <?php echo $singular_class; ?> extends Eloquent {
 	public function get_deleted()
 	{
 	    return $this->get_attribute('deleted_at') ? date('d/m/Y H:i:s', strtotime($this->get_attribute('deleted_at'))) : null;
+	}
+
+	public static function permissoes()
+	{
+		DB::query("INSERT INTO permissions (permissions.name, permissions.group) SELECT * FROM (SELECT 'get_<?php echo str_replace('.', '_', $nested_view.$plural); ?>_index', '<?php echo str_replace('.', '_', $nested_view.$plural); ?>') AS tmp WHERE NOT EXISTS (SELECT name FROM permissions WHERE permissions.name = 'get_<?php echo str_replace('.', '_', $nested_view.$plural); ?>_index' AND permissions.group = '<?php echo str_replace('.', '_', $nested_view.$plural); ?>') LIMIT 1;");
+		DB::query("INSERT INTO permissions (permissions.name, permissions.group) SELECT * FROM (SELECT 'get_<?php echo str_replace('.', '_', $nested_view.$plural); ?>_create', '<?php echo str_replace('.', '_', $nested_view.$plural); ?>') AS tmp WHERE NOT EXISTS (SELECT name FROM permissions WHERE permissions.name = 'get_<?php echo str_replace('.', '_', $nested_view.$plural); ?>_create' AND permissions.group = '<?php echo str_replace('.', '_', $nested_view.$plural); ?>') LIMIT 1;");
+		DB::query("INSERT INTO permissions (permissions.name, permissions.group) SELECT * FROM (SELECT 'post_<?php echo str_replace('.', '_', $nested_view.$plural); ?>_create', '<?php echo str_replace('.', '_', $nested_view.$plural); ?>') AS tmp WHERE NOT EXISTS (SELECT name FROM permissions WHERE permissions.name = 'post_<?php echo str_replace('.', '_', $nested_view.$plural); ?>_create' AND permissions.group = '<?php echo str_replace('.', '_', $nested_view.$plural); ?>') LIMIT 1;");
+		DB::query("INSERT INTO permissions (permissions.name, permissions.group) SELECT * FROM (SELECT 'get_<?php echo str_replace('.', '_', $nested_view.$plural); ?>_view', '<?php echo str_replace('.', '_', $nested_view.$plural); ?>') AS tmp WHERE NOT EXISTS (SELECT name FROM permissions WHERE permissions.name = 'get_<?php echo str_replace('.', '_', $nested_view.$plural); ?>_view' AND permissions.group = '<?php echo str_replace('.', '_', $nested_view.$plural); ?>') LIMIT 1;");
+		DB::query("INSERT INTO permissions (permissions.name, permissions.group) SELECT * FROM (SELECT 'get_<?php echo str_replace('.', '_', $nested_view.$plural); ?>_edit', '<?php echo str_replace('.', '_', $nested_view.$plural); ?>') AS tmp WHERE NOT EXISTS (SELECT name FROM permissions WHERE permissions.name = 'get_<?php echo str_replace('.', '_', $nested_view.$plural); ?>_edit' AND permissions.group = '<?php echo str_replace('.', '_', $nested_view.$plural); ?>') LIMIT 1;");
+		DB::query("INSERT INTO permissions (permissions.name, permissions.group) SELECT * FROM (SELECT 'post_<?php echo str_replace('.', '_', $nested_view.$plural); ?>_edit', '<?php echo str_replace('.', '_', $nested_view.$plural); ?>') AS tmp WHERE NOT EXISTS (SELECT name FROM permissions WHERE permissions.name = 'post_<?php echo str_replace('.', '_', $nested_view.$plural); ?>_edit' AND permissions.group = '<?php echo str_replace('.', '_', $nested_view.$plural); ?>') LIMIT 1;");
+		DB::query("INSERT INTO permissions (permissions.name, permissions.group) SELECT * FROM (SELECT 'get_<?php echo str_replace('.', '_', $nested_view.$plural); ?>_delete', '<?php echo str_replace('.', '_', $nested_view.$plural); ?>') AS tmp WHERE NOT EXISTS (SELECT name FROM permissions WHERE permissions.name = 'get_<?php echo str_replace('.', '_', $nested_view.$plural); ?>_delete' AND permissions.group = '<?php echo str_replace('.', '_', $nested_view.$plural); ?>') LIMIT 1;");
 	}
 }

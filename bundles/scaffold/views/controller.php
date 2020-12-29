@@ -7,6 +7,9 @@ class <?php echo $plural_class; ?>_Controller extends <?php echo $controller; ?>
 		// $this->filter('before', 'auth')->only(array('create', 'edit', 'delete'));
 		$this->filter('before', 'auth')->except(array('login'));
 		$this->filter('before', 'csrf')->on('post');
+
+		//insert permissions to database
+		<?php echo $singular_class; ?>::permissoes();
 	}
 
 	/**
@@ -30,6 +33,8 @@ class <?php echo $plural_class; ?>_Controller extends <?php echo $controller; ?>
 	 */
 	public function get_index()
 	{
+		Acl::can('get_<?php echo $plural; ?>_index');
+
 <?php if($has_relationships): ?>
 		$<?php echo $plural; ?> = <?php echo $singular_class; ?>::with(array(<?php echo $with; ?>))->get();
 <?php else: ?>
@@ -47,6 +52,8 @@ class <?php echo $plural_class; ?>_Controller extends <?php echo $controller; ?>
 	 */
 	public function get_create(<?php echo $belongs_to_params; ?>)
 	{
+		Acl::can('get_<?php echo $plural; ?>_create');
+
 <?php foreach($belongs_to as $model): ?>				
 		$<?php echo $model; ?> = array('' => 'SELECIONE') + <?php echo ucfirst($model); ?>::order_by('id', 'asc')->take(999999)->lists('id', 'id');
 <?php endforeach; ?>
@@ -70,6 +77,8 @@ class <?php echo $plural_class; ?>_Controller extends <?php echo $controller; ?>
 	 */
 	public function post_create()
 	{
+		Acl::can('post_<?php echo $plural; ?>_create');
+
 		$validation = Validator::make(Input::all(), array(
 <?php foreach($fields as $field => $type): ?>
 			'<?php echo $field; ?>' => array(<?php if($type == 'boolean'): ?>
@@ -116,6 +125,8 @@ class <?php echo $plural_class; ?>_Controller extends <?php echo $controller; ?>
 	 */
 	public function get_view($id)
 	{
+		Acl::can('get_<?php echo $plural; ?>_view');
+
 <?php if($has_relationships): ?>
 		$<?php echo $singular; ?> = <?php echo $singular_class; ?>::with(array(<?php echo $with; ?>))->find($id);
 <?php else: ?>
@@ -139,6 +150,8 @@ class <?php echo $plural_class; ?>_Controller extends <?php echo $controller; ?>
 	 */
 	public function get_edit($id)
 	{
+		Acl::can('get_<?php echo $plural; ?>_edit');
+
 		$<?php echo $singular; ?> = <?php echo $singular_class; ?>::find($id);
 
 		if(is_null($<?php echo $singular; ?>))
@@ -162,6 +175,8 @@ class <?php echo $plural_class; ?>_Controller extends <?php echo $controller; ?>
 	 */
 	public function post_edit($id)
 	{
+		Acl::can('post_<?php echo $plural; ?>_edit');
+
 		$validation = Validator::make(Input::all(), array(
 <?php foreach($fields as $field => $type): ?>
 			'<?php echo $field; ?>' => array(<?php if($type == 'boolean'): ?>
@@ -209,6 +224,8 @@ class <?php echo $plural_class; ?>_Controller extends <?php echo $controller; ?>
 	 */
 	public function get_delete($id)
 	{
+		Acl::can('get_<?php echo $plural; ?>_delete');
+
 		$<?php echo $singular; ?> = <?php echo $singular_class; ?>::find($id);
 
 		if( ! is_null($<?php echo $singular; ?>))

@@ -30,7 +30,9 @@ class Tests_Controller extends Base_Controller {
 	 */
 	public function get_index()
 	{
-		$tests = Test::with(array('user', 'blog_comments'))->get();
+		Acl::can('get_tests_index');
+
+		$tests = Test::with(array('user'))->get();
 
 		$this->layout->title   = 'Tests';
 		$this->layout->content = View::make('tests.index')->with('tests', $tests);
@@ -43,6 +45,8 @@ class Tests_Controller extends Base_Controller {
 	 */
 	public function get_create($user_id = null)
 	{
+		Acl::can('get_tests_create');
+
 				
 		$user = array('' => 'SELECIONE') + User::order_by('id', 'asc')->take(999999)->lists('id', 'id');
 
@@ -59,6 +63,8 @@ class Tests_Controller extends Base_Controller {
 	 */
 	public function post_create()
 	{
+		Acl::can('post_tests_create');
+
 		$validation = Validator::make(Input::all(), array(
 			'user_id' => array('required', 'integer'),
 			'name' => array('required'),
@@ -100,7 +106,9 @@ class Tests_Controller extends Base_Controller {
 	 */
 	public function get_view($id)
 	{
-		$test = Test::with(array('user', 'blog_comments'))->find($id);
+		Acl::can('get_tests_view');
+
+		$test = Test::with(array('user'))->find($id);
 
 		if(is_null($test))
 		{
@@ -119,6 +127,8 @@ class Tests_Controller extends Base_Controller {
 	 */
 	public function get_edit($id)
 	{
+		Acl::can('get_tests_edit');
+
 		$test = Test::find($id);
 
 		if(is_null($test))
@@ -141,6 +151,8 @@ class Tests_Controller extends Base_Controller {
 	 */
 	public function post_edit($id)
 	{
+		Acl::can('post_tests_edit');
+
 		$validation = Validator::make(Input::all(), array(
 			'user_id' => array('required', 'integer'),
 			'name' => array('required'),
@@ -187,6 +199,8 @@ class Tests_Controller extends Base_Controller {
 	 */
 	public function get_delete($id)
 	{
+		Acl::can('get_tests_delete');
+
 		$test = Test::find($id);
 
 		if( ! is_null($test))
