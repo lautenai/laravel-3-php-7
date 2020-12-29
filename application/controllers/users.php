@@ -32,7 +32,7 @@ class Users_Controller extends Base_Controller {
 	{
 		Auth::user()->can('list_user') ? : 'Não autorizado: list_user';
 
-		$users = \Verify\Models\User::with(array('roles', 'roles.permissions'))->get();
+		$users = \Verify\Models\User::with(array('roles', 'roles.permissions'))->order_by('username')->get();
 
 		$this->layout->title   = 'Users';
 		$this->layout->content = View::make('users.index')->with('users', $users);
@@ -47,8 +47,10 @@ class Users_Controller extends Base_Controller {
 	{
 		Auth::user()->can('create_user') ? : die('Não autorizado: create_user');
 
+		$roles = \Verify\Models\Role::all();
+
 		$this->layout->title   = 'New User';
-		$this->layout->content = View::make('users.create');
+		$this->layout->content = View::make('users.create', compact('roles'));
 	}
 
 	/**
@@ -69,7 +71,7 @@ class Users_Controller extends Base_Controller {
 
 		if($validation->valid())
 		{
-			$user = new User;
+			$user = new \Verify\Models\User;
 
 			$user->username = Input::get('username');
 			$user->password = Input::get('password');

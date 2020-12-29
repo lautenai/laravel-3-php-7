@@ -1,8 +1,11 @@
 <?php
 
 class Blog_Post extends Eloquent {
+
 	public static $table = 'blog_posts';
+	
 	public static $timestamps = true;
+	
 	public static $soft_deletes = true;
 
 	public function user()

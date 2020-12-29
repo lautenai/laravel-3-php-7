@@ -29,26 +29,18 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
   <style type="text/css">
   .table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
-    background-color: #d7fc03;
+    background-color: #fff2a8;
   }
   </style>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <!-- Site wrapper -->
 <div class="wrapper">
-
-
-
   <!-- =============================================== -->
-
   @include('partials.header')
-
   <!-- =============================================== -->
-
   @include('partials.sidebar')
-
   <!-- =============================================== -->
-
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
     @if (Session::has('message'))
@@ -67,11 +59,9 @@
     {{$content}}
   </div>
   <!-- /.content-wrapper -->
-
   <!-- =============================================== -->
   @include('partials.footer')
   <!-- =============================================== -->
-
   <!-- Add the sidebar's background. This div must be placed
        immediately after the control sidebar -->
   <div class="control-sidebar-bg"></div>

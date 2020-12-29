@@ -35,27 +35,29 @@
 	          </div>
 	          <div class=	"checkbox">
 	            <label>
-	              {{Form::checkbox('verified', '1', Input::old('verified', $user->verified))}} Verified
+	              {{Form::checkbox('verified', '1', Input::old('verified', $user->verified))}} Verificado
 	            </label>
 	          </div>
 	          <div class=	"checkbox">
 	            <label>
-	              {{Form::checkbox('disabled', '1', Input::old('disabled', $user->disabled))}} Disabled
+	              {{Form::checkbox('disabled', '1', Input::old('disabled', $user->disabled))}} Desabilitado
 	            </label>
 	          </div>
 	          <div class=	"checkbox">
 	            <label>
-	              {{Form::checkbox('deleted', '1', Input::old('deleted', $user->deleted))}} Deleted
+	              {{Form::checkbox('deleted', '1', Input::old('deleted', $user->deleted))}} Inativo
 	            </label>
 	          </div>
 
 	          <hr>
 	          	{{Form::label('roles', 'Roles')}}
-	          	<br>
 							@foreach ($roles as $role)
-							{{ $role->name }}
-							{{Form::checkbox('roles[]', $role->id, Input::old('', $user->is($role->name)))}}
-							<br>
+							<div class="checkbox">
+								<label>
+									{{Form::checkbox('roles[]', $role->id, Input::old('', $user->is($role->name)))}} {{ ucfirst($role->name) }}
+								</label>
+							</div>
+							
 							@endforeach
 	        </div>
 	        <!-- /.box-body -->
@@ -68,11 +70,7 @@
 	    <!-- /.box -->
     </div>
     <!-- /.box-body -->
-    <div class="box-footer">
-    </div>
-    <!-- /.box-footer-->
   </div>
   <!-- /.box -->
-
 </section>
 <!-- /.content -->

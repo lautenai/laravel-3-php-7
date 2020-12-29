@@ -7,7 +7,7 @@ class Blog_Posts_Controller extends Base_Controller {
 	 *
 	 * @var string
 	 */
-	public $layout = 'layouts.scaffold';
+	public $layout = 'layouts.adminlte';
 
 	/**
 	 * Indicates if the controller uses RESTful routing.
