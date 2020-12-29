@@ -7,6 +7,9 @@ class Auth_Users_Controller extends Base_Controller {
 		// $this->filter('before', 'auth')->only(array('create', 'edit', 'delete'));
 		$this->filter('before', 'auth')->except(array('login'));
 		$this->filter('before', 'csrf')->on('post');
+
+		//insert permissions to database
+		// User::permissoes();
 	}
 
 	/**
@@ -30,7 +33,9 @@ class Auth_Users_Controller extends Base_Controller {
 	 */
 	public function get_index()
 	{
-		$users = \Verify\Models\User::with(array('roles', 'roles.permissions'))->order_by('username')->get();
+		Acl::can('get_users_index');
+
+		$users = \Verify\Models\User::with(array('roles', 'roles.permissions'))->order_by('username')->active();
 
 		$this->layout->title   = 'Users';
 		$this->layout->content = View::make('auth.users.index')->with('users', $users);
@@ -43,6 +48,7 @@ class Auth_Users_Controller extends Base_Controller {
 	 */
 	public function get_create()
 	{
+		Acl::can('get_users_create');
 
 		$roles = \Verify\Models\Role::all();
 
@@ -57,6 +63,8 @@ class Auth_Users_Controller extends Base_Controller {
 	 */
 	public function post_create()
 	{
+		Acl::can('post_users_create');
+
 		$validation = Validator::make(Input::all(), array(
 			'username' => array('required'),
 			'password' => array('required'),
@@ -104,6 +112,8 @@ class Auth_Users_Controller extends Base_Controller {
 	 */
 	public function get_view($id)
 	{
+		Acl::can('get_users_view');
+
 		$user = \Verify\Models\User::with('roles')->find($id);
 
 		$roles = \Verify\Models\Role::all();
@@ -125,7 +135,7 @@ class Auth_Users_Controller extends Base_Controller {
 	 */
 	public function get_edit($id)
 	{
-
+		Acl::can('get_users_edit');
 
 		$user = \Verify\Models\User::find($id);
 
@@ -148,6 +158,8 @@ class Auth_Users_Controller extends Base_Controller {
 	 */
 	public function post_edit($id)
 	{
+		Acl::can('post_users_edit');
+
 		$validation = Validator::make(Input::all(), array(
 			'username' => array('required'),
 			// 'password' => array('required'),
@@ -202,10 +214,14 @@ class Auth_Users_Controller extends Base_Controller {
 	 */
 	public function get_delete($id)
 	{
+		Acl::can('get_users_delete');
+
 		$user = User::find($id);
 
 		if( ! is_null($user))
 		{
+			$this->deleted($user->id);
+
 			$user->delete();
 
 			Session::flash('message', 'Deleted user #'.$user->id);
@@ -214,20 +230,32 @@ class Auth_Users_Controller extends Base_Controller {
 		return Redirect::to('auth/users');
 	}
 
-	public function get_roles()
+	public function verified($id)
 	{
-		
-		$roles = \Verify\Models\Role::with('permissions')->get();
+		$user = User::find($id);
+		$user->disabled = 1;
+		$user->save();
+		return;
+	}
 
-		// $permissions = \Verify\Models\Permission::all();
+	public function disabled($id)
+	{
+		$user = User::find($id);
+		$user->disabled = 1;
+		$user->save();
+		return;
+	}
 
-		$this->layout->title   = 'Viewing Roles';
-		$this->layout->content = View::make('auth.users.roles', compact('roles'));
+	public function deleted($id)
+	{
+		$user = User::find($id);
+		$user->deleted = 1;
+		$user->save();
+		return;
 	}
 
 	public function get_login()
 	{
-
 		$this->layout = false;
 		return View::make('auth.users.login');
 	}
@@ -245,11 +273,8 @@ class Auth_Users_Controller extends Base_Controller {
 	public function get_logout()
 	{
 		Auth::logout();
-
+		
 		return Redirect::to('auth/users');
-
-		// $this->layout->title   = 'User Login';
-		// $this->layout->content = View::make('auth.users.login');
 	}
 
 }

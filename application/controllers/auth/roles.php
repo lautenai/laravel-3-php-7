@@ -7,6 +7,9 @@ class Auth_Roles_Controller extends Base_Controller {
 		// $this->filter('before', 'auth')->only(array('create', 'edit', 'delete'));
 		$this->filter('before', 'auth')->except(array('login'));
 		$this->filter('before', 'csrf')->on('post');
+
+		//insert permissions to database
+		// Role::permissoes();
 	}
 
 	/**
@@ -30,6 +33,8 @@ class Auth_Roles_Controller extends Base_Controller {
 	 */
 	public function get_index()
 	{
+		('get_roles_index');
+
 		$roles = \Verify\Models\Role::with(array('permissions', 'roles.permissions'))->order_by('name')->get();
 
 		$this->layout->title   = 'Roles';
@@ -43,6 +48,8 @@ class Auth_Roles_Controller extends Base_Controller {
 	 */
 	public function get_create()
 	{
+		Acl::can('get_roles_create');
+
 		$roles = \Verify\Models\Role::all();
 
 		$this->layout->title   = 'New Role';
@@ -56,6 +63,8 @@ class Auth_Roles_Controller extends Base_Controller {
 	 */
 	public function post_create()
 	{
+		Acl::can('post_roles_create');
+
 		$validation = Validator::make(Input::all(), array(
 			'name' => array('required'),
 			'level' => array('required'),
@@ -96,6 +105,8 @@ class Auth_Roles_Controller extends Base_Controller {
 	 */
 	public function get_view($id)
 	{
+		Acl::can('get_roles_view');
+
 		$role = \Verify\Models\Role::with('roles')->find($id);
 
 		$roles = \Verify\Models\Role::all();
@@ -117,6 +128,7 @@ class Auth_Roles_Controller extends Base_Controller {
 	 */
 	public function get_edit($id)
 	{
+		Acl::can('get_roles_edit');
 
 		$role = \Verify\Models\Role::find($id);
 
@@ -148,6 +160,8 @@ class Auth_Roles_Controller extends Base_Controller {
 	 */
 	public function post_edit($id)
 	{
+		Acl::can('post_roles_edit');
+
 		$validation = Validator::make(Input::all(), array(
 			'name' => array('required'),
 			'level' => array('required'),
@@ -193,6 +207,8 @@ class Auth_Roles_Controller extends Base_Controller {
 	 */
 	public function get_delete($id)
 	{
+		Acl::can('get_roles_delete');
+		
 		$role = Role::find($id);
 
 		if( ! is_null($role))

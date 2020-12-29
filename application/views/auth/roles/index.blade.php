@@ -1,8 +1,8 @@
 <section class="content-header">
-  <h1>Users <a class="btn btn-success" href="{{URL::to('auth/roles/create')}}">Create new User</a></h1>
+  <h1>Roles <a class="btn btn-success" href="{{URL::to('auth/roles/create')}}">Create new Role</a></h1>
   <ol class="breadcrumb">
     <li><a href="#"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-    <li><a href="#">Users</a></li>
+    <li><a href="#">Roles</a></li>
     <li class="active">List</li>
   </ol>
 </section>

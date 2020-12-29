@@ -19,50 +19,17 @@
 				{{ Form::hidden('csrf_token', Session::token())}}
         <div class="box-body">
           <div class="form-group">
-            {{Form::label('username', 'Username')}}
-            {{Form::text('username', Input::old('username'), array('class' => 'form-control', 'placeholder' => 'Username', 'required'))}}
+            {{Form::label('name', 'Name')}}
+            {{Form::text('name', Input::old('name'), array('class' => 'form-control', 'placeholder' => 'Name', 'required'))}}
           </div>
-
           <div class="form-group">
-            {{Form::label('password', 'Password')}}
-            {{Form::text('password', '', array('class' => 'form-control', 'placeholder' => 'Password', 'required'))}}
+            {{Form::label('description', 'Description')}}
+            {{Form::textarea('description', Input::old('description'), array('class' => 'form-control', 'placeholder' => 'Description'))}}
           </div>
-
           <div class="form-group">
-            {{Form::label('email', 'E-mail')}}
-            {{Form::text('email', Input::old('email'), array('class' => 'form-control', 'placeholder' => 'E-mail', 'required'))}}
+            {{Form::label('level', 'Level')}}
+            {{Form::number('level', Input::old('level'), array('class' => 'form-control', 'placeholder' => 'Level', 'required'))}}
           </div>
-
-          <div class=	"checkbox">
-            <label>
-              {{Form::checkbox('verified', '1', Input::old('verified'))}} Verificado (e-mail)
-            </label>
-          </div>
-
-          <div class=	"checkbox">
-            <label>
-              {{Form::checkbox('disabled', '1', Input::old('disabled'))}} Desabilitado (não pode acessar o sistema)
-            </label>
-          </div>
-          <!--
-          <div class=	"checkbox">
-            <label>
-              {{Form::checkbox('deleted', '1', Input::old('deleted'))}} Inativo
-            </label>
-          </div>
-        	-->
-        	
-        	<hr>
-
-        	{{Form::label('roles', 'Roles')}}
-					@foreach ($roles as $role)
-					<div class="checkbox">
-						<label>
-							{{Form::checkbox('roles[]', $role->id, Input::old('roles[]'))}} {{ ucfirst($role->name) }}
-						</label>
-					</div>
-					@endforeach
-        
         </div>
         <!-- /.box-body -->
         <div class="box-footer">

@@ -33,12 +33,8 @@
 								<td>{{$user->email}}</td>
 								<td>
 									@foreach ($user->roles as $role)
-										<span class="badge bg-teal">{{ $role->name }}</span>
-										<!--
-										@foreach ($role->permissions as $permission)
-											{{ $permission->name }}
-										@endforeach
-										-->
+										<span class="badge bg-teal">{{ ucwords($role->name) }}</span>
+										<!--@foreach ($role->permissions as $permission){{ $permission->name }}@endforeach-->
 									@endforeach
 								</td>
 								<td>{{($user->verified) ? '<span class="label label-success"><i class="fa fa-fw fa-circle"></i></span>' : '<span class="label label-danger"><i class="fa fa-fw fa-circle"></i></span>'}}</td>
