@@ -25,10 +25,9 @@
       <!-- /.search form -->
       <!-- sidebar menu: : style can be found in sidebar.less -->
       <ul class="sidebar-menu" data-widget="tree">
-		<li class="header">MAIN NAVIGATION</li>
-		<li><a href="{{URL::to('auth/users')}}"><i class="fa fa-users"></i> <span>Users</span></a></li>
-		<li><a href="{{URL::to('auth/users/roles')}}"><i class="fa fa-book"></i> <span>Roles</span></a></li>
-    <li><a href="{{URL::to('auth/users/roles')}}"><i class="fa fa-lock"></i> <span>Permissions</span></a></li>
+      	<li class="header">AUTH</li>
+      	<li><a href="{{URL::to('auth/users')}}"><i class="fa fa-users"></i> <span>Users</span></a></li>
+      	<li><a href="{{URL::to('auth/roles')}}"><i class="fa fa-book"></i> <span>Roles</span></a></li>
       </ul>
     </section>
     <!-- /.sidebar -->

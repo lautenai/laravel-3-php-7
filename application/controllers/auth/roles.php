@@ -43,8 +43,6 @@ class Auth_Roles_Controller extends Base_Controller {
 	 */
 	public function get_create()
 	{
-		Auth::user()->can('create_user') ? : die('Não autorizado: create_user');
-
 		$roles = \Verify\Models\Role::all();
 
 		$this->layout->title   = 'New Role';
@@ -150,7 +148,6 @@ class Auth_Roles_Controller extends Base_Controller {
 	 */
 	public function post_edit($id)
 	{
-		// dd(Input::all());
 		$validation = Validator::make(Input::all(), array(
 			'name' => array('required'),
 			'level' => array('required'),

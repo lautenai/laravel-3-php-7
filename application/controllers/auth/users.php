@@ -30,9 +30,6 @@ class Auth_Users_Controller extends Base_Controller {
 	 */
 	public function get_index()
 	{
-		// Auth::user()->can('list_user') ? : 'Não autorizado: list_user';
-		Acl::can('list_user');
-
 		$users = \Verify\Models\User::with(array('roles', 'roles.permissions'))->order_by('username')->get();
 
 		$this->layout->title   = 'Users';
@@ -46,7 +43,6 @@ class Auth_Users_Controller extends Base_Controller {
 	 */
 	public function get_create()
 	{
-		Auth::user()->can('create_user') ? : die('Não autorizado: create_user');
 
 		$roles = \Verify\Models\Role::all();
 
@@ -130,7 +126,6 @@ class Auth_Users_Controller extends Base_Controller {
 	public function get_edit($id)
 	{
 
-		Auth::user()->can('edit_user') ? : die('Não autorizado: edit_user');
 
 		$user = \Verify\Models\User::find($id);
 
