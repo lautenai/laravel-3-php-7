@@ -9,14 +9,14 @@ enjoy, not something that is painful. Enjoy the fresh air.
 
 ## Feature Overview
 
-###Uses Laravel Verify Bundle by Todd Francis (https://github.com/Toddish/Verify)
+### Uses Laravel Verify Bundle by Todd Francis (https://github.com/Toddish/Verify)
 
-###Uses Scaffold Laravel Bundle by Loïc Sharma (https://github.com/loic-sharma/scaffold)
+### Uses Scaffold Laravel Bundle by Loïc Sharma (https://github.com/loic-sharma/scaffold)
 ```bash
 php artisan scaffold::make user username:string password:string email:string verified:boolean disabled:boolean deleted:boolean
 ```
 
-###Uses Cache:
+### Uses Cache:
 Set Cache Key on application/config/cache.php
 
 ```php
