@@ -272,6 +272,9 @@ class Auth_Users_Controller extends Base_Controller {
 
 	public function get_logout()
 	{
+		Cache::forget('to_check_'.Auth::user()->id);
+		Cache::forget('user_'.Auth::user()->id);
+
 		Auth::logout();
 		
 		return Redirect::to('auth/users');

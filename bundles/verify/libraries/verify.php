@@ -32,7 +32,9 @@ class Verify extends \Laravel\Auth\Drivers\Driver
 	{
 		if (filter_var($id, FILTER_VALIDATE_INT) !== false)
 		{
-			return $this->model()->find($id);
+			// return $this->model()->find($id);
+			return Cache::remember('user_'.$id, function() use($id) { return $this->model()->find($id);}, 60*24);
+
 		}
 	}
 

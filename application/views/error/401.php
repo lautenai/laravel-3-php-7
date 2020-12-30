@@ -122,7 +122,7 @@
 			<?php endif ?>
 
 			<p>
-				Talvez você gostaria de ir à nossa <?php echo HTML::link('/', 'página inicial'); ?>?
+				Talvez você gostaria de ir à nossa <?php echo HTML::link('/', 'página inicial'); ?>? Ou <?php echo HTML::link('auth/users/logout', 'sair do sistema') ?>?
 			</p>
 		</div>
 	</div>

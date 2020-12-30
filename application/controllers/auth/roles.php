@@ -33,7 +33,7 @@ class Auth_Roles_Controller extends Base_Controller {
 	 */
 	public function get_index()
 	{
-		('get_roles_index');
+		Acl::can('get_roles_index');
 
 		$roles = \Verify\Models\Role::with(array('permissions', 'roles.permissions'))->order_by('name')->get();
 

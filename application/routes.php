@@ -44,21 +44,17 @@ Route::get('/', function()
 	return View::make('home.index');
 });
 
-
-
-Route::get('/scaffold', function()
+/*Route::get('/scaffold', function()
 {
 	// Command::run(array('scaffold::make', 'blog.post', 'title:string', 'content:text', 'belongs_to:user', 'has_many:blog.comment', 'timestamps'));
 	return View::make('scaffold.create');
-});
+});*/
 
-Route::get('/test', function()
+/*Route::get('/test', function()
 {
 	
 	return View::make('scaffold.test');
-});
-
-
+});*/
 
 /*
 |--------------------------------------------------------------------------

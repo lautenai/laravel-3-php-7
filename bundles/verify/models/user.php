@@ -2,6 +2,8 @@
 
 namespace Verify\Models;
 
+use Cache;
+
 class User extends EloquentVerifyBase
 {
 
@@ -179,9 +181,11 @@ class User extends EloquentVerifyBase
 		{
 			$to_check = new $class;
 
-			$to_check = $class::with(array('roles', 'roles.permissions'))
-				->where('id', '=', $this->get_attribute('id'))
-				->first();
+			// $to_check = $class::with(array('roles', 'roles.permissions'))->where('id', '=', $this->get_attribute('id'))->first();
+			
+			$to_check = Cache::remember('to_check_'.$this->get_attribute('id'), function() use ($class) {return $class::with(array('roles', 'roles.permissions'))->where('id', '=', $this->get_attribute('id'))->first();}, 60*24);
+
+			//Cache::forget('to_check_'); on logout
 
 			$this->to_check_cache = $to_check;
 		}
