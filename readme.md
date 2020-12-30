@@ -5,7 +5,7 @@ from spaghetti code, Laravel helps you create wonderful applications using
 simple, expressive syntax. Development should be a creative experience that you
 enjoy, not something that is painful. Enjoy the fresh air.
 
-[Official Website & Documentation](http://laravel.com)
+[GitHub](https://github.com/laravel/laravel/tree/v3.2.14)
 
 ## Feature Overview
 
