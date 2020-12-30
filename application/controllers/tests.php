@@ -32,7 +32,9 @@ class Tests_Controller extends Base_Controller {
 	{
 		Acl::can('get_tests_index');
 
-		$tests = Test::with(array('user'))->get();
+		// $tests = Test::with(array('user'))->get();
+
+		$tests = Cache::remember(Config::get('cache.key').'tests', function() {return Test::with(array('user'))->active();}, 60*24);
 
 		$this->layout->title   = 'Tests';
 		$this->layout->content = View::make('tests.index')->with('tests', $tests);
@@ -46,7 +48,6 @@ class Tests_Controller extends Base_Controller {
 	public function get_create($user_id = null)
 	{
 		Acl::can('get_tests_create');
-
 				
 		$user = array('' => 'SELECIONE') + User::order_by('id', 'asc')->take(999999)->lists('id', 'id');
 
@@ -84,6 +85,8 @@ class Tests_Controller extends Base_Controller {
 			$test->data = Input::get('data');
 
 			$test->save();
+
+			Cache::forget(Config::get('cache.key').'tests');
 
 			Session::flash('message', 'Added test #'.$test->id);
 
@@ -178,6 +181,8 @@ class Tests_Controller extends Base_Controller {
 
 			$test->save();
 
+			Cache::forget(Config::get('cache.key').'tests');
+
 			Session::flash('message', 'Updated test #'.$test->id);
 
 			return Redirect::to('tests');
@@ -205,6 +210,8 @@ class Tests_Controller extends Base_Controller {
 
 		if( ! is_null($test))
 		{
+			Cache::forget(Config::get('cache.key').'tests');
+			
 			$test->delete();
 
 			Session::flash('message', 'Deleted test #'.$test->id);

@@ -1,5 +1,7 @@
 <?php
 
+use \Laravel\Config;
+
 /**
  * Verification Library
  *
@@ -33,7 +35,7 @@ class Verify extends \Laravel\Auth\Drivers\Driver
 		if (filter_var($id, FILTER_VALIDATE_INT) !== false)
 		{
 			// return $this->model()->find($id);
-			return Cache::remember('user_'.$id, function() use($id) { return $this->model()->find($id);}, 60*24);
+			return Cache::remember(Config::get('cache.key').'user_'.$id, function() use($id) { return $this->model()->find($id);}, 60*24);
 
 		}
 	}

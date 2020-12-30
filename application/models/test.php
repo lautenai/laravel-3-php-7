@@ -31,7 +31,7 @@ class Test extends Eloquent {
 
 	public function get_data()
 	{
-	    return $this->get_attribute('data') ? date('d/m/Y H:i:s', strtotime($this->get_attribute('data'))) : null;
+	    return $this->get_attribute('data') ? date('d/m/Y', strtotime($this->get_attribute('data'))) : null;
 	}
 
 	public function get_created()
