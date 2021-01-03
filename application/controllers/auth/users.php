@@ -35,7 +35,9 @@ class Auth_Users_Controller extends Base_Controller {
 	{
 		Acl::can('get_users_index');
 
-		$users = \Verify\Models\User::with(array('roles', 'roles.permissions'))->order_by('username')->active();
+		// $users = \Verify\Models\User::with(array('roles', 'roles.permissions'))->order_by('username')->active();
+
+		$users = Cache::remember(Config::get('cache.key').'users', function() { return \Verify\Models\User::with(array('roles', 'roles.permissions'))->order_by('username')->active(); }, 60*24);
 
 		$this->layout->title   = 'Users';
 		$this->layout->content = View::make('auth.users.index')->with('users', $users);
@@ -50,7 +52,7 @@ class Auth_Users_Controller extends Base_Controller {
 	{
 		Acl::can('get_users_create');
 
-		$roles = \Verify\Models\Role::all();
+		$roles = \Verify\Models\Role::where('name', '!=', 'Super Admin')->get();
 
 		$this->layout->title   = 'New User';
 		$this->layout->content = View::make('auth.users.create', compact('roles'));
@@ -86,6 +88,8 @@ class Auth_Users_Controller extends Base_Controller {
 			$user->deleted = Input::get('deleted', '0');
 
 			$user->save();
+
+			Cache::forget(Config::get('cache.key').'users');
 
 			$roles = Input::get('roles');
 			
@@ -139,7 +143,7 @@ class Auth_Users_Controller extends Base_Controller {
 
 		$user = \Verify\Models\User::find($id);
 
-		$roles = \Verify\Models\Role::all();
+		$roles = \Verify\Models\Role::where('name', '!=', 'Super Admin')->get();
 
 		if(is_null($user))
 		{
@@ -188,6 +192,10 @@ class Auth_Users_Controller extends Base_Controller {
 			$user->deleted = Input::get('deleted');
 
 			$user->save();
+
+			Cache::forget(Config::get('cache.key').'users');
+
+			Cache::forget(Config::get('cache.key').'to_check_user_'. $user->id);
 
 			$roles = Input::get('roles');
 			

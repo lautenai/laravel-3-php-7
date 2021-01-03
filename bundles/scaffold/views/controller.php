@@ -36,9 +36,9 @@ class <?php echo $plural_class; ?>_Controller extends <?php echo $controller; ?>
 		Acl::can('get_<?php echo $plural; ?>_index');
 
 <?php if($has_relationships): ?>
-		$<?php echo $plural; ?> = <?php echo $singular_class; ?>::with(array(<?php echo $with; ?>))->get();
+		$<?php echo $plural; ?> = Cache::remember(Config::get('cache.key').'<?php echo $plural; ?>', function() { return <?php echo $singular_class; ?>::with(array(<?php echo $with; ?>))->active(); }, 60*24);
 <?php else: ?>
-		$<?php echo $plural; ?> = <?php echo $singular_class; ?>::all();
+		$<?php echo $plural; ?> = Cache::remember(Config::get('cache.key').'<?php echo $plural; ?>', function() { return <?php echo $singular_class; ?>::active(); }, 60*24);
 <?php endif; ?>
 
 		$this->layout->title   = '<?php echo ucwords(str_replace('_', ' ', $plural_class)); ?>';
@@ -103,6 +103,8 @@ class <?php echo $plural_class; ?>_Controller extends <?php echo $controller; ?>
 <?php endforeach; ?>
 
 			$<?php echo $singular; ?>->save();
+
+			Cache::forget(Config::get('cache.key').'<?php echo $plural; ?>');
 
 			Session::flash('message', 'Added <?php echo str_replace('_', ' ', $singular); ?> #'.$<?php echo $singular; ?>->id);
 
@@ -203,6 +205,8 @@ class <?php echo $plural_class; ?>_Controller extends <?php echo $controller; ?>
 
 			$<?php echo $singular; ?>->save();
 
+			Cache::forget(Config::get('cache.key').'<?php echo $plural; ?>');
+
 			Session::flash('message', 'Updated <?php echo str_replace('_', ' ', $singular); ?> #'.$<?php echo $singular; ?>->id);
 
 			return Redirect::to('<?php echo $nested_path.$plural; ?>');
@@ -230,6 +234,8 @@ class <?php echo $plural_class; ?>_Controller extends <?php echo $controller; ?>
 
 		if( ! is_null($<?php echo $singular; ?>))
 		{
+			Cache::forget(Config::get('cache.key').'<?php echo $plural; ?>');
+
 			$<?php echo $singular; ?>->delete();
 
 			Session::flash('message', 'Deleted <?php echo str_replace('_', ' ', $singular); ?> #'.$<?php echo $singular; ?>->id);

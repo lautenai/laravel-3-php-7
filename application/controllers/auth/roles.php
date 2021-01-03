@@ -35,7 +35,9 @@ class Auth_Roles_Controller extends Base_Controller {
 	{
 		Acl::can('get_roles_index');
 
-		$roles = \Verify\Models\Role::with(array('permissions', 'roles.permissions'))->order_by('name')->get();
+		// $roles = \Verify\Models\Role::with(array('permissions', 'roles.permissions'))->order_by('name')->get();
+
+		$roles = Cache::remember(Config::get('cache.key').'roles', function() { return \Verify\Models\Role::with(array('permissions', 'roles.permissions'))->where('name', '!=', 'Super Admin')->order_by('name')->get(); }, 60*24);
 
 		$this->layout->title   = 'Roles';
 		$this->layout->content = View::make('auth.roles.index')->with('roles', $roles);
@@ -79,6 +81,8 @@ class Auth_Roles_Controller extends Base_Controller {
 			$role->level = Input::get('level');
 			
 			$role->save();
+
+			Cache::forget(Config::get('cache.key').'roles');
 
 			$permissions = Input::get('permissions');
 			
@@ -181,6 +185,8 @@ class Auth_Roles_Controller extends Base_Controller {
 			$role->level = Input::get('level');
 
 			$role->save();
+
+			Cache::forget(Config::get('cache.key').'roles');
 
 			$permissions = Input::get('permissions');
 			

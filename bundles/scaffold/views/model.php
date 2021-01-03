@@ -46,7 +46,7 @@ class <?php echo $singular_class; ?> extends Eloquent {
 <?php if($type == 'date'): ?>
 	public function get_<?php echo $field?>()
 	{
-	    return $this->get_attribute('<?php echo $field?>') ? date('d/m/Y H:i:s', strtotime($this->get_attribute('<?php echo $field?>'))) : null;
+	    return $this->get_attribute('<?php echo $field?>') ? date('d/m/Y', strtotime($this->get_attribute('<?php echo $field?>'))) : null;
 	}
 <?php endif; ?>
 <?php endforeach; ?>
