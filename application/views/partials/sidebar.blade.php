@@ -28,6 +28,7 @@
       	<li class="header">AUTH</li>
       	<li><a href="{{URL::to('auth/users')}}"><i class="fa fa-users"></i> <span>Users</span></a></li>
       	<li><a href="{{URL::to('auth/roles')}}"><i class="fa fa-book"></i> <span>Roles</span></a></li>
+        <li><a href="{{URL::to('tests')}}"><i class="fa fa-book"></i> <span>Tests</span></a></li>
       </ul>
     </section>
     <!-- /.sidebar -->

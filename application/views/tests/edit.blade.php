@@ -37,8 +37,7 @@
 			</div>
 			<div class="form-group">
 				{{Form::label('data', 'Data')}}
-				
-				{{Form::text('data', Input::old('data', $test->data), array('class' => 'form-control', 'placeholder' => 'Data', 'required' => 'required'))}}
+				{{Form::date('data', Input::old('data', date('Y-m-d', strtotime(str_replace('/', '-',$test->data)))), array('class' => 'form-control', 'placeholder' => 'Data', 'required' => 'required'))}}
 			</div>
 			</div>
 		<div class="box-footer">

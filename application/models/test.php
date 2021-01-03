@@ -34,6 +34,11 @@ class Test extends Eloquent {
 	    return $this->get_attribute('data') ? date('d/m/Y', strtotime($this->get_attribute('data'))) : null;
 	}
 
+	public function set_data($data)
+	{
+		return $this->set_attribute('data', date('Y-m-d', strtotime($data)));
+	}
+
 	public function get_created()
 	{
 	    return date('d/m/Y H:i:s', strtotime($this->get_attribute('created_at')));
