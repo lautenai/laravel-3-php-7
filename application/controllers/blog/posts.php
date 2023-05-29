@@ -1,6 +1,16 @@
 <?php
 
 class Blog_Posts_Controller extends Base_Controller {
+	
+	public function __construct() {
+		parent::__construct();
+		// $this->filter('before', 'auth')->only(array('create', 'edit', 'delete'));
+		$this->filter('before', 'auth')->except(array('login'));
+		$this->filter('before', 'csrf')->on('post');
+
+		//insert permissions to database
+		// Blog_Post::permissoes();
+	}
 
 	/**
 	 * The layout being used by the controller.
@@ -23,24 +33,9 @@ class Blog_Posts_Controller extends Base_Controller {
 	 */
 	public function get_index()
 	{
-		$posts = Blog_Post::with(array('user', 'blog_comments'))->order_by('user_id')->active();
+		Acl::can('get_posts_index');
 
-		$this->layout->title   = 'Blog Posts';
-		$this->layout->content = View::make('blog.posts.index')->with('posts', $posts);
-	}
-
-
-	public function get_withtrashed()
-	{
-		$posts = Blog_Post::with(array('user', 'blog_comments'))->order_by('user_id')->withtrashed();
-
-		$this->layout->title   = 'Blog Posts';
-		$this->layout->content = View::make('blog.posts.index')->with('posts', $posts);
-	}
-
-	public function get_trashed()
-	{
-		$posts = Blog_Post::with(array('user', 'blog_comments'))->order_by('user_id')->trashed();
+		$posts = Cache::remember(Config::get('cache.key').'posts', function() { return Blog_Post::with(array('user', 'blog_comments'))->active(); }, 60*24);
 
 		$this->layout->title   = 'Blog Posts';
 		$this->layout->content = View::make('blog.posts.index')->with('posts', $posts);
@@ -52,8 +47,11 @@ class Blog_Posts_Controller extends Base_Controller {
 	 * @return void
 	 */
 	public function get_create($user_id = null)
-	{				
-		$user = array('' => 'SELECIONE') + User::where_null('deleted_at')->order_by('id', 'asc')->take(999999)->lists('username', 'id');
+	{
+		Acl::can('get_posts_create');
+
+				
+		$user = array('' => 'SELECIONE') + User::order_by('id', 'asc')->take(999999)->lists('id', 'id');
 
 		$this->layout->title   = 'New Blog Post';
 		$this->layout->content = View::make('blog.posts.create', array(
@@ -68,6 +66,8 @@ class Blog_Posts_Controller extends Base_Controller {
 	 */
 	public function post_create()
 	{
+		Acl::can('post_posts_create');
+
 		$validation = Validator::make(Input::all(), array(
 			'user_id' => array('required', 'integer'),
 			'title' => array('required'),
@@ -84,6 +84,8 @@ class Blog_Posts_Controller extends Base_Controller {
 
 			$post->save();
 
+			Cache::forget(Config::get('cache.key').'posts');
+
 			Session::flash('message', 'Added post #'.$post->id);
 
 			return Redirect::to('blog/posts');
@@ -95,19 +97,6 @@ class Blog_Posts_Controller extends Base_Controller {
 					->with_errors($validation->errors)
 					->with_input();
 		}
-
-		/*
-		$post = new Blog_Post;
-
-		$post->user_id = 5;
-		$post->title = 'title';
-		$post->content = 'content';
-
-		$post->update_or_create(
-			['user_id' => rand(5,9), 'title' => 'title'],
-			['content' => date('H:i:s')]
-		);
-		*/
 	}
 
 	/**
@@ -118,6 +107,8 @@ class Blog_Posts_Controller extends Base_Controller {
 	 */
 	public function get_view($id)
 	{
+		Acl::can('get_posts_view');
+
 		$post = Blog_Post::with(array('user', 'blog_comments'))->find($id);
 
 		if(is_null($post))
@@ -137,16 +128,17 @@ class Blog_Posts_Controller extends Base_Controller {
 	 */
 	public function get_edit($id)
 	{
+		Acl::can('get_posts_edit');
+
 		$post = Blog_Post::find($id);
 
 		if(is_null($post))
 		{
 			return Redirect::to('blog/posts');
 		}
-
+		
 				
-		$user = array('' => 'SELECIONE') + User::order_by('id', 'asc')->take(999999)->lists('username', 'id');
-
+		$user = array('' => 'SELECIONE') + User::order_by('id', 'asc')->take(999999)->lists('id', 'id');
 
 		$this->layout->title   = 'Editing Blog Post';
 		$this->layout->content = View::make('blog.posts.edit')->with('post', $post)->with('user', $user);
@@ -160,6 +152,8 @@ class Blog_Posts_Controller extends Base_Controller {
 	 */
 	public function post_edit($id)
 	{
+		Acl::can('post_posts_edit');
+
 		$validation = Validator::make(Input::all(), array(
 			'user_id' => array('required', 'integer'),
 			'title' => array('required'),
@@ -180,6 +174,8 @@ class Blog_Posts_Controller extends Base_Controller {
 			$post->content = Input::get('content');
 
 			$post->save();
+
+			Cache::forget(Config::get('cache.key').'posts');
 
 			Session::flash('message', 'Updated post #'.$post->id);
 
@@ -202,33 +198,17 @@ class Blog_Posts_Controller extends Base_Controller {
 	 */
 	public function get_delete($id)
 	{
+		Acl::can('get_posts_delete');
+
 		$post = Blog_Post::find($id);
 
 		if( ! is_null($post))
 		{
+			Cache::forget(Config::get('cache.key').'posts');
+
 			$post->delete();
 
 			Session::flash('message', 'Deleted post #'.$post->id);
-		}
-
-		return Redirect::to('blog/posts');
-	}
-
-	/**
-	 * Delete a specific post.
-	 *
-	 * @param  int       $id
-	 * @return Response
-	 */
-	public function get_restore($id)
-	{
-		$post = Blog_Post::find($id);
-
-		if( ! is_null($post))
-		{
-			$post->restore();
-
-			Session::flash('message', 'Restored post #'.$post->id);
 		}
 
 		return Redirect::to('blog/posts');

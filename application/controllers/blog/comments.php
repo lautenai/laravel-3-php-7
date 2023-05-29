@@ -33,9 +33,9 @@ class Blog_Comments_Controller extends Base_Controller {
 	 */
 	public function get_index()
 	{
-		// Acl::can('get_comments_index');
+		Acl::can('get_comments_index');
 
-		$comments = Blog_Comment::with(array('blog_post', 'user'))->get();
+		$comments = Cache::remember(Config::get('cache.key').'comments', function() { return Blog_Comment::with(array('blog_post', 'user'))->active(); }, 60*24);
 
 		$this->layout->title   = 'Blog Comments';
 		$this->layout->content = View::make('blog.comments.index')->with('comments', $comments);
@@ -86,6 +86,8 @@ class Blog_Comments_Controller extends Base_Controller {
 			$comment->content = Input::get('content');
 
 			$comment->save();
+
+			Cache::forget(Config::get('cache.key').'comments');
 
 			Session::flash('message', 'Added comment #'.$comment->id);
 
@@ -178,6 +180,8 @@ class Blog_Comments_Controller extends Base_Controller {
 
 			$comment->save();
 
+			Cache::forget(Config::get('cache.key').'comments');
+
 			Session::flash('message', 'Updated comment #'.$comment->id);
 
 			return Redirect::to('blog/comments');
@@ -205,6 +209,8 @@ class Blog_Comments_Controller extends Base_Controller {
 
 		if( ! is_null($comment))
 		{
+			Cache::forget(Config::get('cache.key').'comments');
+
 			$comment->delete();
 
 			Session::flash('message', 'Deleted comment #'.$comment->id);

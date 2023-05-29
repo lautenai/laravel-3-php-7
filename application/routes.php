@@ -57,10 +57,12 @@ Route::get('/redis', function()
 
 Route::get('/cache-fluent', function()
 {
-	$users = Cache::remember('users', function() {return DB::table('users')->get();}, 1);
+	$users = Cache::remember('users', function() {return DB::table('users')->get(['username', 'email']);}, 0);
 	echo '<pre>';
 	dump($users);
 	echo '</pre>';
+
+	DB::table('users')->where('id', '=', 1)->update(['username' => 'admin','email' => 'admin@gmail.com']);
 });
 
 Route::get('/cache-forget', function()

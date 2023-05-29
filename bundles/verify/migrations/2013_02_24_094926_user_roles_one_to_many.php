@@ -29,7 +29,7 @@ class Verify_User_Roles_One_To_Many {
 			$table->increments('id');
 			$table->integer('user_id')->unsigned()->index();
 			$table->integer('role_id')->unsigned()->index();
-			// $table->timestamps();
+			$table->timestamps();
 
 			$table->foreign('user_id')->references('id')->on($prefix.'users');
 			$table->foreign('role_id')->references('id')->on($prefix.'roles');
@@ -42,8 +42,8 @@ class Verify_User_Roles_One_To_Many {
 			DB::table($prefix.'role_user')->insert(array(
 				'user_id'				=> $user->id,
 				'role_id'				=> $user->role_id,
-				// 'created_at'        	=> $user->created_at,
-				// 'updated_at'        	=> $user->updated_at
+				'created_at'        	=> $user->created_at,
+				'updated_at'        	=> $user->updated_at
 			));
 		}
 

@@ -325,7 +325,7 @@ class Table {
 
 		$this->date('updated_at');
 		
-		$this->date('deleted_at');
+		$this->date('deleted_at')->nullable();
 	}
 
 	/**

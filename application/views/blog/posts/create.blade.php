@@ -1,43 +1,38 @@
-<div class="span16">
-	<ul class="breadcrumb span6">
-		<li>
-			<a href="{{URL::to('users')}}">Users</a> <span class="divider">/</span>
-		</li>
-		<li>
-			<a href="{{URL::to('blog/posts')}}">Blog Posts</a> <span class="divider">/</span>
-		</li>
-		<li class="active">New Blog Post</li>
-	</ul>
-</div>
+<section class="content-header">
+  <h1>
+    Posts <a class="btn btn-success" href="{{URL::to('blog/posts')}}">Posts</a>
+  </h1>
+  <ol class="breadcrumb">
+    <li><a href="#"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+    <li><a href="{{URL::to('blog/posts')}}">Blog Posts</a></li>
+    <li class="active">New Blog Post</li>
+    <!--<li><a href="{{URL::to('users')}}"><i class="fa fa-dashboard"></i> Users</a></li>-->
+    
+  </ol>
+</section>
 
-{{Form::open(null, 'post', array('class' => 'form-stacked span16'))}}
-	<fieldset>
-		<div class="clearfix">
-			{{Form::label('user_id', 'User Id')}}
-
-			<div class="input">
+<section class="content">
+  <div class="box box-primary">
+    <div class="box-body">
+		{{Form::open(null, 'post', array('role' => 'form'))}}
+		{{ Form::hidden('csrf_token', Session::token())}}
+			<div class="form-group">
+				{{Form::label('user_id', 'User Id')}}
 				{{ Form::select('user_id', $user, '', array('class' => 'form-control', 'placeholder' => 'User Id', 'id' => 'user_id', 'required' => 'required')) }}
 			</div>
-		</div>
-		<div class="clearfix">
-			{{Form::label('title', 'Title')}}
-
-			<div class="input">
-				{{Form::text('title', Input::old('title'), array('class' => 'span6'))}}
+			<div class="form-group">
+				{{Form::label('title', 'Title')}}
+				{{Form::text('title', Input::old('title'), array('class' => 'form-control', 'placeholder' => 'Title', 'required' => 'required'))}}
 			</div>
-		</div>
-		<div class="clearfix">
-			{{Form::label('content', 'Content')}}
-
-			<div class="input">
-				{{Form::textarea('content', Input::old('content'), array('class' => 'span10'))}}
+			<div class="form-group">
+				{{Form::label('content', 'Content')}}
+				{{Form::textarea('content', Input::old('content'), array('class' => 'form-control', 'placeholder' => 'Content', 'required' => 'required'))}}
 			</div>
+    </div>
+		<div class="box-footer">
+			{{Form::submit('Salvar', array('class' => 'btn btn-primary'))}}
+			ou <a href="{{URL::to(Request::referrer())}}">Cancelar</a>
 		</div>
-
-		<div class="actions">
-			{{Form::submit('Save', array('class' => 'btn primary'))}}
-
-			or <a href="{{URL::to(Request::referrer())}}">Cancel</a>
-		</div>
-	</fieldset>
-{{Form::close()}}
+		{{Form::close()}}
+  </div>
+</section>
