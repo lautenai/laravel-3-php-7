@@ -172,6 +172,8 @@ if ( ! Request::cli() and Config::get('session.driver') !== '')
 	Session::load();
 }
 
+require "application/helpers/helpers.php";
+
 // require "vendor/autoload.php";
 // use Illuminate\Database\Capsule\Manager as Capsule;
 // $capsule = new Capsule;

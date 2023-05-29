@@ -33,7 +33,7 @@ class Verify_Init {
 			$table->increments('id');
 			$table->string('name', 100)->index();
 			$table->string('description', 255)->nullable();
-			$table->timestamps();
+			// $table->timestamps();
 		});
 
 		Schema::create(VERIFY_PREFIX.'roles', function($table)
@@ -44,7 +44,7 @@ class Verify_Init {
 			$table->string('name', 100)->index();
 			$table->string('description', 255)->nullable();
 			$table->integer('level');
-			$table->timestamps();
+			// $table->timestamps();
 		});
 
 		Schema::create(VERIFY_PREFIX.'users', function($table)
@@ -60,7 +60,7 @@ class Verify_Init {
 			$table->boolean('verified');
 			$table->boolean('disabled');
 			$table->boolean('deleted');
-			$table->timestamps();
+			// $table->timestamps();
 
 			$table->foreign('role_id')->references('id')->on(VERIFY_PREFIX.'roles');
 		});
@@ -72,7 +72,7 @@ class Verify_Init {
 			$table->increments('id');
 			$table->integer('permission_id')->unsigned()->index();
 			$table->integer('role_id')->unsigned()->index();
-			$table->timestamps();
+			// $table->timestamps();
 
 			$table->foreign('permission_id')->references('id')->on(VERIFY_PREFIX.'permissions');
 			$table->foreign('role_id')->references('id')->on(VERIFY_PREFIX.'roles');
@@ -81,8 +81,8 @@ class Verify_Init {
 		DB::table(VERIFY_PREFIX.'roles')->insert(array(
 			'name'				=> Config::get('verify::verify.super_admin'),
 			'level'				=> 10,
-			'created_at'        => date('Y-m-d H:i:s'),
-			'updated_at'        => date('Y-m-d H:i:s')
+			// 'created_at'        => date('Y-m-d H:i:s'),
+			// 'updated_at'        => date('Y-m-d H:i:s')
 		));
 
 		DB::table(VERIFY_PREFIX.'users')->insert(array(
@@ -91,8 +91,8 @@ class Verify_Init {
 			'salt'				=> 'a227383075861e775d0af6281ea05a49',
 			'role_id'			=> 1,
 			'email' 			=> 'example@gmail.com',
-			'created_at'		=> date('Y-m-d H:i:s'),
-			'updated_at'        => date('Y-m-d H:i:s'),
+			// 'created_at'		=> date('Y-m-d H:i:s'),
+			// 'updated_at'        => date('Y-m-d H:i:s'),
 			'verified'			=> 1,
 			'disabled'			=> 0,
 			'deleted'			=> 0

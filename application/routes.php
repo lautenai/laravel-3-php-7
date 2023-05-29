@@ -41,7 +41,31 @@ Route::controller(Controller::detect());
 
 Route::get('/', function()
 {
+	return Redirect::to('auth/inicio');
 	return View::make('home.index');
+});
+
+Route::get('/redis', function()
+{
+	$redis = Redis::db();
+
+	$redis->set('name', 'Lautenai');
+	$name = $redis->get('name');
+
+	echo $name;
+});
+
+Route::get('/cache-fluent', function()
+{
+	$users = Cache::remember('users', function() {return DB::table('users')->get();}, 1);
+	echo '<pre>';
+	dump($users);
+	echo '</pre>';
+});
+
+Route::get('/cache-forget', function()
+{
+	Cache::forget('users');
 });
 
 /*Route::get('/scaffold', function()
@@ -126,7 +150,7 @@ Route::filter('csrf', function()
 
 Route::filter('auth', function()
 {
-	if (Auth::guest()) return Redirect::to('auth/users/login');
+	if (Auth::guest()) return Redirect::to('auth/login');
 });
 
 require path('app').'verify.php';
