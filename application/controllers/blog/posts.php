@@ -17,7 +17,7 @@ class Blog_Posts_Controller extends Base_Controller {
 	 *
 	 * @var string
 	 */
-	public $layout = 'layouts.adminlte';
+	public $layout = 'layouts.starter';
 
 	/**
 	 * Indicates if the controller uses RESTful routing.
@@ -49,8 +49,7 @@ class Blog_Posts_Controller extends Base_Controller {
 	public function get_create($user_id = null)
 	{
 		Acl::can('get_posts_create');
-
-				
+						
 		$user = array('' => 'SELECIONE') + User::order_by('id', 'asc')->take(999999)->lists('id', 'id');
 
 		$this->layout->title   = 'New Blog Post';

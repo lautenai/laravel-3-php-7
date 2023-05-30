@@ -24,9 +24,6 @@ class Auth_Controller extends Base_Controller {
 	public function get_login()
 	{
 		return View::make('auth.login');
-
-		$this->layout->title   = 'Auth';
-		$this->layout->content = View::make('auth.login');
 	}
 
     public function post_login()
