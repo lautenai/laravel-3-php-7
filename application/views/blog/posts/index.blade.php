@@ -1,10 +1,12 @@
 <section class="content-header">
-  <h1>Posts <a class="btn btn-success" href="{{URL::to('blog/posts/create')}}">Create new Blog Post</a></h1>
-  <ol class="breadcrumb">
-    <li><a href="#"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-    <li><a href="#">Posts</a></li>
-    <li class="active">List</li>
-  </ol>
+  <h1>Posts <a class="btn btn-dark" href="{{URL::to('blog/posts/create')}}">Create new Blog Post</a></h1>
+  <nav aria-label="breadcrumb">
+	<ol class="breadcrumb">
+		<li class="breadcrumb-item"><a href="#">Home</a></li>
+		<li class="breadcrumb-item"><a href="{{URL::to('blog/posts')}}">Posts</a></li>
+		<li class="breadcrumb-item active" aria-current="page">Listar</li>
+	</ol>
+  </nav>
 </section>
 
 <section class="content">

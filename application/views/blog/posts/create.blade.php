@@ -1,14 +1,14 @@
 <section class="content-header">
   <h1>
-    Posts <a class="btn btn-success" href="{{URL::to('blog/posts')}}">Posts</a>
+    Posts <a class="btn btn-dark" href="{{URL::to('blog/posts')}}">Posts</a>
   </h1>
-  <ol class="breadcrumb">
-    <li><a href="#"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-    <li><a href="{{URL::to('blog/posts')}}">Blog Posts</a></li>
-    <li class="active">New Blog Post</li>
-    <!--<li><a href="{{URL::to('users')}}"><i class="fa fa-dashboard"></i> Users</a></li>-->
-    
-  </ol>
+  <nav aria-label="breadcrumb">
+	<ol class="breadcrumb">
+		<li class="breadcrumb-item"><a href="#">Home</a></li>
+		<li class="breadcrumb-item"><a href="{{URL::to('blog/posts')}}">Posts</a></li>
+		<li class="breadcrumb-item active" aria-current="page">Criar</li>
+	</ol>
+  </nav>
 </section>
 
 <section class="content">
